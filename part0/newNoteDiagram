@@ -1,0 +1,62 @@
+Note right of browser: I have never used Mermaid syntax but I am going to do my best. First the document will mirror the example from the class, and then it will show the process of POSTing a new 'note'.
+
+  webserver
+  client
+
+Note right of browser: The user opens their browser and navigates to "https://studies.cs.helsinki.fi/exampleapp/notes"
+  client->>webserver: GET https://studies.cs.helsinki.fi/exampleapp/notes
+Note right  of browser: The server activates and serves the page to the client's browser.
+  webserver activates
+  webserver-->>client: HTML document for web app
+  webserver deactivates
+
+  client->>webserver: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+  webserver activates
+  webserver-->>client: CSS document
+  webserver deactivates
+
+  client->>webserver: GET GET https://studies.cs.helsinki.fi/exampleapp/main.js
+  webserver activates
+  webserver-->>client: JS file
+  webserver deactivates
+
+
+  client->>webserver: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+  activate webserver
+  webserver-->>client: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
+  deactivate webserver
+
+Note right of browser: This is where the homework assignment beings:
+
+Note right of browser: The user writes their new 'note' and presses the submit button.
+
+Note right of browser: the data in the'note' form widget is sent to the webserver with the 'name' of note with:
+
+  client->>webserver: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+  activate webserver
+  webserver-->>client: 302 Found
+  deactivate webserver
+
+Note right of browser: the server adds the new 'note' to the data.json file and the process repeats itself. GET the documents that make up the webpage. Full page refresh.
+
+  client->>webserver: GET https://studies.cs.helsinki.fi/exampleapp/notes
+  webserver activates
+  webserver-->>client: HTML document for web app
+  webserver deactivates
+
+  client->>webserver: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+  webserver activates
+  webserver-->>client: CSS document
+  webserver deactivates
+
+  client->>webserver: GET GET https://studies.cs.helsinki.fi/exampleapp/main.js
+  webserver activates
+  webserver-->>client: JS file
+  webserver deactivates
+
+
+  client->>webserver: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+  activate webserver
+  webserver-->>client: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
+  deactivate webserver
+  
