@@ -1,0 +1,25 @@
+Note right of browser: The process of the client visiting this page is extremely similar to the "traditional web page" style of this app. With some exceptions. Different files are activated.
+
+  webserver
+  client
+
+  client->>webserver: GET https://studies.cs.helsinki.fi/exampleapp/spa
+  webserver activates
+  webserver-->>client: HTML document for web app
+  webserver deactivates
+
+  client->>webserver: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+  webserver activates
+  webserver-->>client: CSS document
+  webserver deactivates
+
+  client->>webserver: GET GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+  webserver activates
+  webserver-->>client: JS file
+  webserver deactivates
+
+
+  client->>webserver: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+  activate webserver
+  webserver-->>client: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
+  deactivate webserver
