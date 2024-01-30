@@ -1,0 +1,10 @@
+Note right of browser: This omits the details from the previous steps. The user enters data into the input with the name of 'note' and clicks submit
+
+Note right of browser: JS file executes both a POST and pushes the new note into the JSON file in the client's browser, and rerenders the 'notes'--this displays it on their browser without a sending a new GET
+client->>webserver: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+webserver activates
+webserver-->>client: 201 Created
+webserver deactivates
+
+Note right of browser: No reload has happened. The data was sent to the server. Next time the user revisits the page, their new 'note' will be served to them by the server thru that next set of GET requests. Before they leave the page, the new 'note' been added to DOM by the spa.JS file pushing it into the JSON file.
+
