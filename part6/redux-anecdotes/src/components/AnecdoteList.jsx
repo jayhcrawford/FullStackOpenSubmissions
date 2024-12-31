@@ -1,9 +1,12 @@
 import React from 'react'
 
 const AnecdoteList = (props) => {
+
+  let anecdotesArray = [...props.anecdotes]
+
   return (
     <>
-      {props.anecdotes
+      {anecdotesArray
         .sort((a, b) =>
           b.votes - a.votes)
         .map(anecdote =>
