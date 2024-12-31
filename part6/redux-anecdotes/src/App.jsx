@@ -1,10 +1,11 @@
 import React from 'react'
+import { useEffect } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 
-import anecdoteReducer, { vote, addNew } from './reducers/anecdoteReducer'
+import anecdoteReducer, { initializeAnecdotes, createAnecdote, castVote } from './reducers/anecdoteReducer'
 import filterReducer, { addFilter } from './reducers/filterReducer'
-import notificationReducer, { addNotification, remNotification } from './reducers/notificationReducer'
+import notificationReducer, { setNotification } from './reducers/notificationReducer'
 
 
 import AnecdoteList from './components/AnecdoteList'
@@ -12,9 +13,14 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Filter from './components/Filter'
 import Notification from './components/Notification'
 
+import anecdoteService from './services/anecdotes'
+import { current } from '@reduxjs/toolkit'
+
 
 
 const App = () => {
+
+
   const anecdotes = useSelector(state => {
     if (state.filter != '') {
       let filtered = state.anecdotes.filter((anecdote) => {
@@ -31,17 +37,22 @@ const App = () => {
   })
   const dispatch = useDispatch()
 
-  const addVote = (id) => {
-    dispatch(vote(id))
+  useEffect(() => {
+    dispatch(initializeAnecdotes())
+  }, [])
+
+  const addVote = (anecdote) => {
+    dispatch(castVote(anecdote))
     sendNotification('A vote was cast!')
   }
 
-  const addAnecdote = (event) => {
+  const addAnecdote = async (event) => {
     event.preventDefault();
-    const anecdote = event.target.anecdote.value
+    let anecdote = event.target.anecdote.value
     event.target.anecdote.value = ''
-    dispatch(addNew(anecdote))
+    dispatch(createAnecdote(anecdote))
     sendNotification(`\'${anecdote}\' anecdote was added!`)
+  
   }
 
   const filterAnecdotes = (filterText) => {
@@ -49,8 +60,8 @@ const App = () => {
   }
 
   const sendNotification = (message) => {
-    dispatch(addNotification(message))
-    setTimeout(() => dispatch(remNotification()), 5000)
+    console.log(message)
+    dispatch(setNotification(message, 3))
   }
 
 

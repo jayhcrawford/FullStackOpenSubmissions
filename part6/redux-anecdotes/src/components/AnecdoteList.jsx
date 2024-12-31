@@ -16,7 +16,7 @@ const AnecdoteList = (props) => {
             </div>
             <div>
               has {anecdote.votes}
-              <button onClick={() => props.addVote(anecdote.id)}>vote</button>
+              <button onClick={() => props.addVote(anecdote)}>vote</button>
             </div>
           </div>
         )}
