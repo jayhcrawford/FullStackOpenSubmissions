@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+
+import { useField } from './hooks'
 
 import React from 'react'
 import { getAnecdotes, postAnecdote } from './services/anecdoteService'
@@ -75,14 +77,21 @@ const Footer = () => (
   <div>
     Anecdote app for <a href='https://fullstackopen.com/'>Full Stack Open</a>.
 
-    See <a href=''>Add your link here, Jay</a> for the source code.
+    See <a href='https://github.com/jayhcrawford/FullStackOpenSubmissions/tree/main/part7/routed-anecdotes'>https://github.com/jayhcrawford/FullStackOpenSubmissions/tree/main/part7/routed-anecdotes</a> for the source code.
   </div>
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const content = useField("text");
+  const author = useField("text");
+  const info = useField("text");
+
+  const handleReset = (event) => {
+    event.preventDefault();
+    content.onReset();
+    author.onReset();
+    info.onReset();
+  };
 
 
   const handleSubmit = (e) => {
@@ -99,21 +108,22 @@ const CreateNew = (props) => {
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} >
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...content} /> {/*content*/}
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...author} /> {/*author*/}
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input {...info} /> {/*info*/}
         </div>
-        <button>create</button>
+        <button>create</button> <button onClick={handleReset}>reset</button>
       </form>
+
     </div>
   )
 
@@ -137,7 +147,14 @@ const sendNotification = (setterFunction, message, durationInSeconds) => {
     clearTimeout(previousTimout)
   }
   setterFunction(message)
-  previousTimout = setTimeout(()=> setterFunction(''), durationInSeconds * 1000)
+  previousTimout = setTimeout(() => setterFunction(''), durationInSeconds * 1000)
+}
+
+function ensureHttps(url) {
+  if (!url.startsWith('https://')) {
+    return 'https://' + url;
+  }
+  return url;
 }
 
 
@@ -150,15 +167,28 @@ const App = () => {
     getAnecdotes().then((response) => {
       setAnecdotes(response)
     })
-  }, [])
+  }, [notification])
 
-  const addNew = (anecdote) => {
-    anecdote.id = Math.round(Math.random() * 10000)
-    setAnecdotes(anecdotes.concat(anecdote))
-    console.log(anecdote)
-    postAnecdote(anecdote)
-    navigate('/')
-    sendNotification(setNotification, `${anecdote.content} was posted!`, 5)
+  const addNew = async (anecdote) => {
+    let newPost = {};
+    newPost.id = Math.round(Math.random() * 10000)
+    const formattedURL = ensureHttps(anecdote.info.value)
+    newPost = {
+      ...newPost,
+      author: anecdote.author.value,
+      content: anecdote.content.value,
+      info: formattedURL,
+      votes: anecdote.votes
+    }
+
+    const result = await postAnecdote(newPost)
+
+    if (result.status != 201) {
+      sendNotification(setNotification, `A ${result.status} error occurred. This is likely due to unfilled inputs, or input values of fewer than 5 characters`, 5)
+    } else {
+      navigate('/')
+      sendNotification(setNotification, `${newPost.content} was posted!`, 5)
+    }
   }
 
   const anecdoteById = (id) =>

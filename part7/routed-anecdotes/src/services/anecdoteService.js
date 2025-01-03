@@ -6,7 +6,11 @@ export const getAnecdotes = async () =>
         return res.data
     })
 
-export const postAnecdote = async (anecdote) => 
-    axios.post(baseURL, anecdote).then(res => {
-        return res.data
-    })
+export const postAnecdote = async (anecdote) => {
+    try {
+        const response = await axios.post(baseURL, anecdote)
+        return response
+    } catch (error) {
+        return error.response
+    }
+}
