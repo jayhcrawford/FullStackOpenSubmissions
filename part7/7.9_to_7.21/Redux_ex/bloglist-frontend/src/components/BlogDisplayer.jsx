@@ -1,39 +1,26 @@
 import React from 'react'
-import Blog from './Blog'
+import { Link } from 'react-router-dom'
 
 const BlogDisplayer = (props) => {
   const blogsPassedIn = [...props.allBlogs]
   if (blogsPassedIn) {
     return (
-      <div>
-      {blogsPassedIn ? blogsPassedIn
-            .sort((a, b) => b.likes - a.likes)
-            .map((blog) => {
-              return (
-                <Blog
-                  key={blog.id}
-                  handleDelete={props.handleDelete}
-                  setListOfAllBlogs={props.setListOfAllBlogs}
-                  listOfAllBlogs={props.listOfAllBlogs}
-                  passedBlog={blog}
-                  user={props.user}
-                  likeHandler={props.likeHandler}
-                  deleteHandler={props.deleteHandler}
-                />
-              )
-            }) : null} 
-      </div>
+      <ul>
+        {blogsPassedIn
+          ? blogsPassedIn
+              .sort((a, b) => b.likes - a.likes)
+              .map((blog) => {
+                return (
+                  <p key={blog.id}>
+                    <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                  </p>
+                )
+              })
+          : null}
+      </ul>
     )
   }
 
-  return (
-    <div data-testid="blog-displayer-body">
-      
-
-
-
-      
-    </div>
-  )
+  return null
 }
 export default BlogDisplayer

@@ -1,8 +1,7 @@
 import React from 'react'
-import { useState } from 'react'
+
 
 const BlogForm = (props) => {
-
   const handleVisibility = () => {
     props.setVisible(!props.isVisible)
   }
@@ -10,8 +9,7 @@ const BlogForm = (props) => {
   if (props.isVisible) {
     return (
       <>
-        {' '}
-        <form onSubmit={props.handleNewBlogPost}>
+        <form style={{marginTop: '1em'}} onSubmit={props.handleNewBlogPost}>
           Blog Title:
           <input
             id={'blog-title'}
@@ -52,7 +50,11 @@ const BlogForm = (props) => {
       </>
     )
   } else {
-    return <button onClick={handleVisibility}>Create New Blog</button>
+    return (
+      <button style={{ marginTop: '1em' }} onClick={handleVisibility}>
+        Create New Blog
+      </button>
+    )
   }
 }
 

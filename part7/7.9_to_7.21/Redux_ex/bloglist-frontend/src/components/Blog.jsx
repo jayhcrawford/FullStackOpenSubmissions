@@ -1,45 +1,22 @@
-import { useState, useEffect } from 'react'
 import React from 'react'
-import blogService from '../services/blogs'
-import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
+import { useState } from 'react'
 
 const Blog = React.forwardRef((props, ref) => {
-  const [viewDetails, setViewDetails] = useState(false)
 
-  const handleViewBlog = () => {
-    setViewDetails(!viewDetails)
-  }
-
-  if (!viewDetails) {
-    return (
-      <div>
-        <p>
-          {props.passedBlog.title} - {props.passedBlog.author}{' '}
-          <button
-            data-testid="make-blog-visible"
-            className="show-blog"
-            onClick={handleViewBlog}
-          >
-            View Details
-          </button>
-        </p>
-      </div>
-    )
-  } else {
-    return (
+  return (
+    <>
       <div data-testid="whole-blog">
+        <h2>{props.passedBlog.title}</h2>
         <p>
-          {props.passedBlog.title} - {props.passedBlog.author}{' '}
-          <button className="hide-blog" onClick={handleViewBlog}>
-            Hide Details
-          </button>{' '}
+          <b>Author:</b> {props.passedBlog.author}
         </p>
-        <p>Blog URL: {props.passedBlog.url}</p>
+
+        <Link to={props.passedBlog.url} target="_blank">
+          {props.passedBlog.url}
+        </Link>
         <div>
-          Likes:{' '}
-          <p className="likes-displayer" data-testid="like-count">
-            {props.passedBlog.likes}
-          </p>{' '}
+          <b>Likes:</b> {props.passedBlog.likes}{' '}
           <button
             data-testid="like-button"
             onClick={() => props.likeHandler(props.passedBlog)}
@@ -47,7 +24,9 @@ const Blog = React.forwardRef((props, ref) => {
             Like
           </button>
         </div>
-        <p>User: {props.user.username}</p>
+        <p>
+          <b>Added by user:</b> {props.passedBlog.user.username}
+        </p>
         {props.user.username == props.passedBlog.user.username && (
           <p>
             <button
@@ -59,8 +38,20 @@ const Blog = React.forwardRef((props, ref) => {
           </p>
         )}
       </div>
-    )
-  }
+      <div>
+        <h3>Comments</h3>
+          <input name="comment" onChange={({ target }) => props.setComment(target.value)} value={props.comment}></input>
+          <button type="submit" onClick={() => props.addComment(props.comment, props.passedBlog)}>Add a comment</button>
+          <ul>
+            {props.passedBlog.comments.map((comment) => {
+              return (
+                <li key={comment}>{comment}</li>
+              )
+            })}
+          </ul>
+      </div>
+    </>
+  )
 })
 /*
 Blog.propTypes = {

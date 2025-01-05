@@ -1,18 +1,22 @@
+import { useState, useEffect } from 'react'
+
 import {
-  useState,
-  useEffect,
-  useReducer,
-  useContext,
-  userDispatch,
-} from 'react'
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Link,
+  useMatch,
+} from 'react-router-dom'
 
 import loginService from './services/login'
 
-import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import BlogDisplayer from './components/BlogDisplayer'
-import PendingMessage from './components/PendingMessage'
+import Blog from './components/Blog'
+import User from './components/User'
+
+import Home from './pages/Home'
+import Users from './pages/Users'
 
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -20,13 +24,15 @@ import { notify, reset } from './features/notification/notifierSlice'
 import { logIn, logOut } from './features/login/loginSlice'
 import {
   setAll,
-  addBlog,
   addLike,
   removeBlog,
   removeAll,
+  addComment
 } from './features/blog/blogSlice'
 
-import { populateAll, create, deletePost, putLike } from './services/blogs'
+import { populateAll, deletePost, putLike, getOne, putComment } from './services/blogs'
+
+import { getUser } from './services/users'
 
 //provide login reducer
 
@@ -36,12 +42,14 @@ const App = () => {
   const allBlogs = useSelector((state) => state.blogs.allBlogs)
   const dispatch = useDispatch()
 
-  const [blogFormIsVisible, setBlogFormIsVisible] = useState(false)
-  const [newBlogTitle, setNewBlogTitle] = useState('')
-  const [newBlogAuthor, setNewBlogAuthor] = useState('')
-  const [newBlogUrl, setNewBlogUrl] = useState('')
+  const [singleBlogID, setSingleBlogID] = useState(null)
+  const [singleBlog, setSingleBlog] = useState(null)
+  const [singleUserID, setSingleUserID] = useState(null)
+  const [singleUser, setSingleUser] = useState(null)
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [comment, setComment] = useState('')
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -70,6 +78,7 @@ const App = () => {
     dispatch(removeAll())
     setUsername('')
     setPassword('')
+    window.location.href = '../'
   }
 
   //token in local storage? Dispatch user info to context
@@ -89,101 +98,190 @@ const App = () => {
     }, timeInSec * 1000)
   }
 
-  //post blogs
-  const handleNewBlogPost = (event) => {
-    event.preventDefault()
-    const newPost = {
-      title: event.target.title.value,
-      author: event.target.author.value,
-      url: event.target.url.value,
-      user: user.id,
-    }
-    create(newPost)
-      .then((response) => {
-        dispatch(addBlog(response))
-        setBlogFormIsVisible(false)
-        setNewBlogTitle('')
-        setNewBlogAuthor('')
-        setNewBlogUrl('')
-        postNotification(notify, `${newPost.title} was posted!`, 'green', 5)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
-
   const likeHandler = async (blog) => {
     try {
       let blogWithNewLikes = { ...blog }
       blogWithNewLikes.likes += 1
       dispatch(addLike(blogWithNewLikes))
       await putLike(blogWithNewLikes)
-      postNotification(notify, `\'${blogWithNewLikes.title}\' was liked!`, 'green', 5)
+      setSingleBlog(blogWithNewLikes)
+      postNotification(
+        notify,
+        `\'${blogWithNewLikes.title}\' was liked!`,
+        'green',
+        5
+      )
     } catch (error) {
       console.log(error)
     }
   }
 
   const deleteHandler = (blogID) => {
-    deletePost(blogID).then(() => {
-      dispatch(removeBlog(blogID))
-    }).catch((error) => {
-      console.log(error)
-    })
+    deletePost(blogID)
+      .then(() => {
+        dispatch(removeBlog(blogID))
+        postNotification(notify, 'A blog was deleted', 'green', 5)
+        setTimeout(() => {
+          window.location.href = '../'
+        }, 2000)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
+  const commentHandler = (comment, blog) => {
+    let updatedBlog = {
+      ...blog,
+      comments: blog.comments.concat(comment)
+    }
+    dispatch(addComment({comment: comment, blog: updatedBlog}))
+    putComment(blog, comment).then((response) => {
+      postNotification(
+        notify,
+        `\'${comment}\' was commented!`,
+        'green',
+        5
+      )
+    })
+    setComment('')
+    setTimeout(() => {
+      location.reload()
+    }, 2000)
+  }
+
+  //if the user is newly logged in or out, store or reset the store with fetched blogposts
   useEffect(() => {
     if (user) {
       populateAll().then((response) => {
         dispatch(setAll(response))
+        console.log('Refresh at useEffect 888')
       })
     } else {
       dispatch(removeAll())
     }
   }, [user])
 
+  //check for matches
+  const blogMatch = useMatch('/blogs/:id')
+  if (blogMatch && blogMatch.params.id === singleBlogID) {
+    //do nothing, because the singleBlog ID has already been set
+  } else if (blogMatch) {
+    setSingleBlogID(blogMatch.params.id)
+    //if not looking for a match, reset relevant state
+  } else if (!blogMatch && singleBlogID != null) {
+    setSingleBlogID(null)
+    setSingleBlog(null)
+  }
+  //If a match occurs, get the single blog information and put it in state
+  useEffect(() => {
+    if (singleBlogID) {
+      getOne(singleBlogID).then((response) => {
+        setSingleBlog(response)
+        console.log('Refresh in useEffect 444')
+      })
+    }
+  }, [singleBlogID])
+
+  //check for matches
+  const userMatch = useMatch('/users/:id')
+  if (userMatch && userMatch.params.id === singleUserID) {
+    //do nothing, singleUserID is already set
+  } else if (userMatch) {
+    setSingleUserID(userMatch.params.id)
+    //if not looking for a match, reset relevant state
+  } else if (!userMatch && singleUserID != null) {
+    setSingleUserID(null)
+    setSingleUser(null)
+  }
+  //If a match occurs, fetch it's information and store it in state
+  useEffect(() => {
+    if (singleUserID) {
+      getUser(singleUserID).then((response) => {
+        setSingleUser(response)
+        console.log('Refresh in useEffect 333')
+      })
+    }
+  }, [singleUserID])
+
+
   return (
     <>
-      <Notification notification={notification} />
-      {user && <p>{user.name} is logged in</p>}
-      {user && <button onClick={handleLogOut}>Log Out</button>}
-      {!user && (
-        <LoginForm
-          username={username}
-          setUsername={setUsername}
-          password={password}
-          setPassword={setPassword}
-          handleLogin={handleLogin}
-        />
-      )}
-      {user && <h2>Blogs</h2>}
       {user && (
-        <BlogForm
-          isVisible={blogFormIsVisible}
-          setVisible={setBlogFormIsVisible}
-          setNewBlogTitle={setNewBlogTitle}
-          setNewBlogAuthor={setNewBlogAuthor}
-          setNewBlogUrl={setNewBlogUrl}
-          newBlogAuthor={newBlogAuthor}
-          newBlogTitle={newBlogTitle}
-          newBlogUrl={newBlogUrl}
-          handleNewBlogPost={handleNewBlogPost}
-        />
+        <header style={{ backgroundColor: 'lightGrey' }}>
+          <Link style={{ margin: '.5em' }} to="/">
+            blogs
+          </Link>
+          <Link style={{ margin: '.5em' }} to="/users">
+            users
+          </Link>
+          {user && <>{user.name} is logged in </>}
+          {user && (
+            <>
+              <button
+                style={{ marginTop: '1em', marginBottom: '1em' }}
+                onClick={handleLogOut}
+              >
+                Log Out
+              </button>
+            </>
+          )}
+        </header>
       )}
 
-      {user && allBlogs && (
-        <BlogDisplayer
-          likeHandler={likeHandler}
-          deleteHandler={deleteHandler}
-          user={user}
-          allBlogs={allBlogs}
-        />
-      )}
+      <Notification notification={notification} />
+
+      <Routes>
+        {singleBlog && (
+          <Route
+            path="/blogs/:id"
+            element={
+              <Blog
+                passedBlog={singleBlog}
+                user={user}
+                likeHandler={likeHandler}
+                deleteHandler={deleteHandler}
+                addComment={commentHandler}
+                comment={comment}
+                setComment={setComment}
+              />
+            }
+          />
+        )}
+
+        {!singleBlog && (
+          <Route path="/blogs/:id" element={<div>blog not found</div>} />
+        )}
+
+        {singleUser && (
+          <Route path="/users/:id" element={<User allBlogs={allBlogs} singleUser={singleUser}/>} />
+        )}
+
+        {!singleUser && (
+          <Route path="/users/:id" element={<div>user not found</div>} />
+        )}
+
+        {!user && (
+          <Route
+            path="/"
+            element={
+              <LoginForm
+                username={username}
+                setUsername={setUsername}
+                password={password}
+                setPassword={setPassword}
+                handleLogin={handleLogin}
+              />
+            }
+          />
+        )}
+        {user && <Route path="/" element={<Home />} />}
+
+        {user && <Route path="/users" element={<Users />} />}
+        {!user && <Route path="/users" element={null} />}
+      </Routes>
     </>
   )
 }
 
 export default App
-
-/*
- */

@@ -23,6 +23,11 @@ export const populateAll = async () => {
   return request.data
 }
 
+export const getOne = async (id) => {
+  const request = await axios.get(`${baseUrl}/${id}`)
+  return request.data
+}
+
 export const putLike = async (newObject) => {
   try {
     const likesURL = baseUrl + '/like'
@@ -33,10 +38,24 @@ export const putLike = async (newObject) => {
   }
 }
 
+export const putComment = async (blog, comment) => {
+  try {
+    let newBlog = {}
+    newBlog.id = blog.id
+    newBlog.comments = blog.comments.concat(comment)
+
+    const commentsURL = baseUrl + '/' + blog.id + '/comments'
+    const request = await axios.put(commentsURL, newBlog)
+    return request
+  } catch (error) {
+    console.log(error, 'error at put comment')
+  }
+}
+
 export const deletePost = async (blogID) => {
   const deleteURL = baseUrl + '/' + blogID
   const deleted = await axios.delete(deleteURL)
   return blogID
 }
 
-export default {populateAll, setToken, create, deletePost}
+export default { populateAll, setToken, create, deletePost, putComment }

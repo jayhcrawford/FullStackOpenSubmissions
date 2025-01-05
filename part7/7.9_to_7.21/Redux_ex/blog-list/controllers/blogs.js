@@ -12,8 +12,15 @@ const getTokenFrom = (request) => {
   return null
 }
 
+//get all blogs
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
+  response.json(blogs)
+})
+
+//get blog by ID
+blogsRouter.get('/:id', async (request, response) => {
+  const blogs = await Blog.findById(request.params.id).populate('user', { username: 1, name: 1 })
   response.json(blogs)
 })
 
@@ -65,6 +72,23 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     response.status(204).end()
   } catch (exception) {
     next(exception)
+  }
+})
+
+
+
+blogsRouter.put('/:id/comments', async (request, response) => {
+  try {
+    const { id } = request.params
+    const updates = request.body
+    const updatedBlog = await Blog.findByIdAndUpdate(id, updates)
+
+    if (!updatedBlog) {
+      return response.status(404).json({ message: 'Blog not found' })
+    }
+    response.json(updatedBlog)
+  } catch (error) {
+    response.status(500).json({ message: error.message })
   }
 })
 
