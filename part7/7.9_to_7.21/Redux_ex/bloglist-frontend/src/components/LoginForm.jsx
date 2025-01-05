@@ -1,14 +1,14 @@
 import React from 'react'
-import { useState } from 'react'
-import loginService from '../services/login'
-import blogService from '../services/blogs'
+import { Button, TextField } from '@mui/material'
 
 const LoginForm = (props) => {
   return (
     <form onSubmit={props.handleLogin}>
       <div>
-        username
-        <input
+        <TextField
+          id="username-input"
+          label="Username"
+          variant="filled"
           data-testid="Username"
           type="text"
           value={props.username}
@@ -18,8 +18,10 @@ const LoginForm = (props) => {
         />
       </div>
       <div>
-        password
-        <input
+        <TextField
+          id="password-input"
+          label="Password"
+          variant="filled"
           data-testid="Password"
           type="password"
           value={props.password}
@@ -27,9 +29,9 @@ const LoginForm = (props) => {
           onChange={({ target }) => props.setPassword(target.value)}
         />
       </div>
-      <button data-testid="login-button" type="submit">
+      <Button variant="contained" data-testid="login-button" type="submit">
         Login
-      </button>
+      </Button>
     </form>
   )
 }

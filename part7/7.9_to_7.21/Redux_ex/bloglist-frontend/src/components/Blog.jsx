@@ -1,9 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { Button, TextField } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt'
 
 const Blog = React.forwardRef((props, ref) => {
-
   return (
     <>
       <div data-testid="whole-blog">
@@ -17,38 +19,53 @@ const Blog = React.forwardRef((props, ref) => {
         </Link>
         <div>
           <b>Likes:</b> {props.passedBlog.likes}{' '}
-          <button
+          <Button
+            variant="contained"
             data-testid="like-button"
             onClick={() => props.likeHandler(props.passedBlog)}
           >
             Like
-          </button>
+          </Button>
         </div>
         <p>
           <b>Added by user:</b> {props.passedBlog.user.username}
         </p>
         {props.user.username == props.passedBlog.user.username && (
           <p>
-            <button
+            <Button
+              variant="contained"
               data-testid="delete-blog"
               onClick={() => props.deleteHandler(props.passedBlog.id)}
+              startIcon={<DeleteIcon />}
             >
               Delete
-            </button>
+            </Button>
           </p>
         )}
       </div>
       <div>
         <h3>Comments</h3>
-          <input name="comment" onChange={({ target }) => props.setComment(target.value)} value={props.comment}></input>
-          <button type="submit" onClick={() => props.addComment(props.comment, props.passedBlog)}>Add a comment</button>
-          <ul>
-            {props.passedBlog.comments.map((comment) => {
-              return (
-                <li key={comment}>{comment}</li>
-              )
-            })}
-          </ul>
+        <ul>
+          {props.passedBlog.comments.map((comment) => {
+            return <li key={comment}>{comment}</li>
+          })}
+        </ul>
+        <TextField
+          id="comment-input"
+          variant="filled"
+          name="comment"
+          onChange={({ target }) => props.setComment(target.value)}
+          value={props.comment}
+        />
+        <br />
+        <Button
+          startIcon={<ThumbUpAltIcon />}
+          variant="contained"
+          type="submit"
+          onClick={() => props.addComment(props.comment, props.passedBlog)}
+        >
+          comment
+        </Button>
       </div>
     </>
   )

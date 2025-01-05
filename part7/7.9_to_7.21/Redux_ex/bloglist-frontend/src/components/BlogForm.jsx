@@ -1,5 +1,20 @@
 import React from 'react'
+import { Button } from '@mui/material'
+import Stack from '@mui/material/Stack'
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import { styled } from '@mui/material/styles'
 
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles('dark', {
+    backgroundColor: '#1A2027',
+  }),
+}))
 
 const BlogForm = (props) => {
   const handleVisibility = () => {
@@ -9,7 +24,7 @@ const BlogForm = (props) => {
   if (props.isVisible) {
     return (
       <>
-        <form style={{marginTop: '1em'}} onSubmit={props.handleNewBlogPost}>
+        <form style={{ marginTop: '1em' }} onSubmit={props.handleNewBlogPost}>
           Blog Title:
           <input
             id={'blog-title'}
@@ -37,23 +52,30 @@ const BlogForm = (props) => {
             onChange={({ target }) => props.setNewBlogUrl(target.value)}
           />
           <br />
-          <button
+          <Button
+            variant="contained"
             type="submit"
             data-testid="blog-submit"
             id="form-submit-button"
           >
             Create
-          </button>
+          </Button>
           <br />
         </form>
-        <button onClick={handleVisibility}>Close Blog Form</button>
+        <Button variant="contained" onClick={handleVisibility}>
+          Close Blog Form
+        </Button>
       </>
     )
   } else {
     return (
-      <button style={{ marginTop: '1em' }} onClick={handleVisibility}>
-        Create New Blog
-      </button>
+      <Button
+        variant="contained"
+        style={{ marginTop: '1em' }}
+        onClick={handleVisibility}
+      >
+        Add New Blog
+      </Button>
     )
   }
 }

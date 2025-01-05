@@ -8,6 +8,24 @@ import {
   useMatch,
 } from 'react-router-dom'
 
+import { Button } from '@mui/material'
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles('dark', {
+    backgroundColor: '#1A2027',
+  }),
+}));
+
+
 import loginService from './services/login'
 
 import Notification from './components/Notification'
@@ -27,10 +45,21 @@ import {
   addLike,
   removeBlog,
   removeAll,
-  addComment
+  addComment,
 } from './features/blog/blogSlice'
 
-import { populateAll, deletePost, putLike, getOne, putComment } from './services/blogs'
+import GroupsIcon from '@mui/icons-material/Groups';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import LogoutIcon from '@mui/icons-material/Logout';
+
+
+import {
+  populateAll,
+  deletePost,
+  putLike,
+  getOne,
+  putComment,
+} from './services/blogs'
 
 import { getUser } from './services/users'
 
@@ -133,16 +162,11 @@ const App = () => {
   const commentHandler = (comment, blog) => {
     let updatedBlog = {
       ...blog,
-      comments: blog.comments.concat(comment)
+      comments: blog.comments.concat(comment),
     }
-    dispatch(addComment({comment: comment, blog: updatedBlog}))
+    dispatch(addComment({ comment: comment, blog: updatedBlog }))
     putComment(blog, comment).then((response) => {
-      postNotification(
-        notify,
-        `\'${comment}\' was commented!`,
-        'green',
-        5
-      )
+      postNotification(notify, `\'${comment}\' was commented!`, 'green', 5)
     })
     setComment('')
     setTimeout(() => {
@@ -204,26 +228,27 @@ const App = () => {
     }
   }, [singleUserID])
 
-
   return (
     <>
       {user && (
-        <header style={{ backgroundColor: 'lightGrey' }}>
+        <header style={{ backgroundColor: 'lightGrey', padding: '1em' }}>
           <Link style={{ margin: '.5em' }} to="/">
-            blogs
+            <Button startIcon={<TextSnippetIcon/>} variant="contained">blogs</Button>
           </Link>
           <Link style={{ margin: '.5em' }} to="/users">
-            users
+            <Button startIcon={<GroupsIcon/>} variant="contained">users</Button>
           </Link>
           {user && <>{user.name} is logged in </>}
           {user && (
             <>
-              <button
-                style={{ marginTop: '1em', marginBottom: '1em' }}
+              <Button
+                variant="outlined"
+                style={{ float: 'right' }}
                 onClick={handleLogOut}
+                endIcon={<LogoutIcon/>}
               >
                 Log Out
-              </button>
+              </Button>
             </>
           )}
         </header>
@@ -254,7 +279,10 @@ const App = () => {
         )}
 
         {singleUser && (
-          <Route path="/users/:id" element={<User allBlogs={allBlogs} singleUser={singleUser}/>} />
+          <Route
+            path="/users/:id"
+            element={<User allBlogs={allBlogs} singleUser={singleUser} />}
+          />
         )}
 
         {!singleUser && (
