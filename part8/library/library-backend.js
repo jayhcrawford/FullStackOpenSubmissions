@@ -127,7 +127,7 @@ const typeDefs = `
   type Book {
     title: String,
     author: String,
-    published: Int,
+    published: String,
     genres: [String!]
   },
   type Author {
@@ -138,13 +138,13 @@ const typeDefs = `
   type Mutation {
     addBook(
       title: String!
-      author: String
-      published: Int
+      author: String!
+      published: String!
       genres: [String!]
     ): Book,
     editAuthor(
       name: String!
-      setBornTo: Int!
+      setBornTo: String!
     ): Author
   }
 `; 
@@ -220,6 +220,7 @@ const resolvers = {
       authors.forEach((author) => {
         let newAuthor = {
           name: author.name,
+          born: author.born,
           bookCount: 0,
         };
 
