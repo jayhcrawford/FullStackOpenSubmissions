@@ -58,19 +58,16 @@ const Authors = (props) => {
   const handleSubmitBirthyear = (event) => {
     event.preventDefault();
     const setBornTo = birthyear;
+    const token = props.token;
     const name = event.target.authorInput.value;
 
-    console.log(birthyear, name)
+    props.updateAuthor({ variables: { token, name, setBornTo } });
 
-    props.udpateAuthor({ variables: { name, setBornTo } });
-
-
-    console.log("design a function to submit birthyear mutations");
+    setBirthyear("");
   };
 
-
   const onInputBirthYear = (event) => {
-    setBirthyear(event.target.value);
+    setBirthyear(Number(event.target.value));
   };
 
   return (
@@ -100,52 +97,55 @@ const Authors = (props) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <MiniBox>
-        <Grid container spacing={2}>
-          <h3>Set author's birthyear</h3>
-          <form onSubmit={handleSubmitBirthyear}>
-            <Grid size={12}>
-              <select style={{ width: "100%" }} name="authorInput">
-                {props.authors.map((a) => {
-                  return (
-                    <option key={a.name} value={a.name}>
-                      {a.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </Grid>
-            <Grid size={12}>
-              birthyear
-              <TextField
-                // value={name} instead of this line write below line
-                value={birthyear ? birthyear : ""}
-                onChange={onInputBirthYear}
-                labelid="yearInput"
-                name="yearInput"
-                style={{ width: "100%" }}
-              ></TextField>
-            </Grid>
-            <Grid
-              size={12}
-              sx={{
-                display: "flex",
-                justifyContent: "right",
-              }}
-            >
-              <Button
+      {props.token && (
+        <MiniBox>
+          <Grid container spacing={2}>
+            <h3>Set author's birthyear</h3>
+            <form onSubmit={handleSubmitBirthyear}>
+              <Grid size={12}>
+                <select style={{ width: "100%" }} name="authorInput">
+                  {props.authors.map((a) => {
+                    return (
+                      <option key={a.name} value={a.name}>
+                        {a.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </Grid>
+              <Grid size={12}>
+                birthyear
+                <TextField
+                  // value={name} instead of this line write below line
+                  value={birthyear ? birthyear : ""}
+                  onChange={onInputBirthYear}
+                  labelid="yearInput"
+                  type="number"
+                  name="yearInput"
+                  style={{ width: "100%" }}
+                ></TextField>
+              </Grid>
+              <Grid
+                size={12}
                 sx={{
-                  backgroundColor: "black",
+                  display: "flex",
+                  justifyContent: "right",
                 }}
-                variant="contained"
-                type="submit"
               >
-                update author
-              </Button>
-            </Grid>
-          </form>
-        </Grid>
-      </MiniBox>
+                <Button
+                  sx={{
+                    backgroundColor: "black",
+                  }}
+                  variant="contained"
+                  type="submit"
+                >
+                  update author
+                </Button>
+              </Grid>
+            </form>
+          </Grid>
+        </MiniBox>
+      )}
     </Paper>
   );
 };

@@ -7,15 +7,11 @@ import { Button } from "@mui/material";
 import { TextField } from "@mui/material";
 
 const NewBook = (props) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
+  const [title, setTitle] = useState("Jerrod's Great Book");
+  const [author, setAuthor] = useState("Jerrod");
   const [published, setPublished] = useState("");
   const [genre, setGenre] = useState("");
-  const [genres, setGenres] = useState([]);
-
-  const [createBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }],
-  });
+  const [genres, setGenres] = useState(["swagness", "swaggery"]);
 
   if (!props.show) {
     return null;
@@ -23,8 +19,11 @@ const NewBook = (props) => {
 
   const submit = async (event) => {
     event.preventDefault();
+    const token = props.token;
 
-    props.createBook({ variables: { title, author, published, genres } });
+    props.createBook({
+      variables: { token, title, author, published, genres },
+    });
 
     setTitle("");
     setPublished("");
@@ -62,9 +61,9 @@ const NewBook = (props) => {
             published
             <TextField
               style={{ width: "100%" }}
-              type="number"
               value={published}
-              onChange={({ target }) => setPublished(target.value)}
+              type="number"
+              onChange={({ target }) => setPublished(Number(target.value))}
             />
           </Grid>
           <Grid size={12} style={{ display: "flex", justifyContent: "center" }}>

@@ -6,10 +6,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import GenresBar from "./GenresBar";
 
-
+import { useState } from "react";
 
 const Books = (props) => {
+  const [filter, setFilter] = useState("All");
+
   if (!props.show || !props.books) {
     return null;
   }
@@ -29,22 +32,26 @@ const Books = (props) => {
               <TableRow>
                 <TableCell align="left">title</TableCell>
                 <TableCell align="left">author</TableCell>
-                <TableCell align="left">published</TableCell>
+                <TableCell align="right">published</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {props.books.map((a) => (
-                <TableRow key={a.title}>
-                  <TableCell align="left">{a.title}</TableCell>
-                  <TableCell align="left">{a.author}</TableCell>
-                  <TableCell align="right">{a.published}</TableCell>
-                </TableRow>
-              ))}
+              {props.books.map((a) => {
+                if (a.genres.includes(filter) || filter === 'All') {
+                  return (
+                    <TableRow key={a.title}>
+                      <TableCell align="left">{a.title}</TableCell>
+                      <TableCell align="left">{a.author.name}</TableCell>
+                      <TableCell align="right">{a.published}</TableCell>
+                    </TableRow>
+                  );
+                }
+              })}
             </TableBody>
           </Table>
         </TableContainer>
+        <GenresBar setFilter={setFilter} genres={props.genres} />
       </Paper>
-
     </>
   );
 };
