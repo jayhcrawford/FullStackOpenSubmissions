@@ -142,6 +142,9 @@ const typeDefs = `
     genre: String!
   },
   type Mutation {
+    genreFilter(
+      genre: String!
+    ): [Book!]
     addBook(
       token: String!
       title: String!
@@ -244,6 +247,32 @@ const resolvers = {
     },
   },
   Mutation: {
+    genreFilter: async (root, args) => {
+      const library = await Book.find({
+        genres: { $in: [args.genre] },
+      });
+
+      libraryWithAuthorData = [];
+
+      for (const book of library) {
+        const result = await Author.find({ name: book.author });
+        let newEntry = {
+          id: book._id,
+          title: book.title,
+          author: {
+            name: result[0].name,
+            born: result[0].born,
+            bookCount: result[0].bookCount,
+            id: result[0]._id,
+          },
+          genres: book.genres,
+          published: book.published,
+        };
+        libraryWithAuthorData.push(newEntry);
+      }
+
+      return libraryWithAuthorData;
+    },
     addBook: async (root, args) => {
       let book = new Book({
         title: args.title,

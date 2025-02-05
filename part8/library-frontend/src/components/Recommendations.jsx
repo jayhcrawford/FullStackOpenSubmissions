@@ -15,6 +15,7 @@ const Recommendations = (props) => {
   const [filter, setFilter] = useState(null);
   const [favoriteGenre, setFavoriteGenre] = useState(null);
   const [newFavGenre, setNewFavGenre] = useState("");
+  const [filteredBooks, setFilteredBooks] = useState(null);
 
   if (!props.show || !props.books || !props.token) {
     return null;
@@ -30,9 +31,6 @@ const Recommendations = (props) => {
   };
 
   const handleSubmitNewFav = async () => {
-    console.log(props.token.returnToken);
-    console.log(newFavGenre);
-
     const result = await props.updateFavGenre({
       variables: { token: props.token.returnToken, favoriteGenre: newFavGenre },
     });
@@ -100,7 +98,13 @@ const Recommendations = (props) => {
             </TableBody>
           </Table>
         </TableContainer>
-        <GenresBar setFilter={setFilter} genres={props.genres} />
+        <GenresBar
+          setFilter={setFilter}
+          filter={filter}
+          genres={props.genres}
+          filterGenre={props.filterGenre}
+          setFilteredBooks={setFilteredBooks}
+        />
       </Paper>
     </>
   );

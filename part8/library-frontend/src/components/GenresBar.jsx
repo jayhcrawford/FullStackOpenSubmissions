@@ -10,16 +10,42 @@ const GenresBar = (props) => {
     props.setFilter(filter);
   };
 
+  const handleGraphQLFilter = async (filter) => {
+    if (filter.toLowerCase() == "all") {
+      props.setFilteredBooks(null);
+      props.setFilter(filter);
+    } else {
+      const filterResult = await props.filterGenre({
+        variables: {
+          genre: filter,
+        },
+      });
+
+      if (Object.hasOwn(filterResult, "data")) {
+        props.setFilteredBooks(filterResult.data.genreFilter);
+        props.setFilter(filter);
+      }
+    }
+  };
+
   return (
     <div style={{ margin: "1em" }}>
       Genres:{" "}
       {props.genres.map((genre) => {
+        const buttonColor = () => {
+          return props.filter == genre ? "lightgrey" : "white";
+        };
         return (
           <Button
-            sx={{ margin: ".3em", color: "black", borderColor: "black" }}
+            sx={{
+              margin: ".3em",
+              color: "black",
+              borderColor: "black",
+              backgroundColor: buttonColor,
+            }}
             key={genre}
-            variant="outlined"
-            onClick={() => handleClick(genre)}
+            variant={props.filter == genre ? "contained" : "outlined"}
+            onClick={() => handleGraphQLFilter(genre)}
           >
             {genre}
           </Button>

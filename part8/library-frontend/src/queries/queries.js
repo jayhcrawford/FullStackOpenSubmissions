@@ -13,6 +13,19 @@ export const ALL_BOOKS = gql`
   }
 `;
 
+export const GENRE_FILTER_BOOKS = gql`
+  mutation genreFilter($genre: String!) {
+    genreFilter(genre: $genre) {
+      title
+      author {
+        name
+      }
+      published
+      genres
+    }
+  }
+`;
+
 export const ALL_AUTHORS = gql`
   query {
     allAuthors {

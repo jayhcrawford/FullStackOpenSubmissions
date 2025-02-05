@@ -12,6 +12,7 @@ import {
   UPDATE_AUTHOR,
   LOGIN,
   UPDATE_FAV_GENRE,
+  GENRE_FILTER_BOOKS,
 } from "./queries/queries";
 
 import { Button, ButtonGroup } from "@mui/material";
@@ -38,6 +39,8 @@ const App = () => {
     }
   }, []);
 
+  const [filterGenre] = useMutation(GENRE_FILTER_BOOKS);
+
   const [updateAuthor] = useMutation(UPDATE_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }],
   });
@@ -46,7 +49,7 @@ const App = () => {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
   });
 
-  const [updateFavGenre] = useMutation(UPDATE_FAV_GENRE)
+  const [updateFavGenre] = useMutation(UPDATE_FAV_GENRE);
 
   const [login] = useMutation(LOGIN);
 
@@ -182,7 +185,14 @@ const App = () => {
         {/* Show books regardless of login status */}
         <Route
           path="/books"
-          element={<Books show={true} books={booksArray} genres={allGenres} />}
+          element={
+            <Books
+              filterGenre={filterGenre}
+              show={true}
+              books={booksArray}
+              genres={allGenres}
+            />
+          }
         />
 
         <Route
@@ -195,6 +205,7 @@ const App = () => {
               token={token}
               updateFavGenre={updateFavGenre}
               setToken={setToken}
+              filterGenre={filterGenre}
             />
           }
         />

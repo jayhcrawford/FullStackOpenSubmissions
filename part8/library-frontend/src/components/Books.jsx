@@ -12,6 +12,7 @@ import { useState } from "react";
 
 const Books = (props) => {
   const [filter, setFilter] = useState("All");
+  const [filteredBooks, setFilteredBooks] = useState(null);
 
   if (!props.show || !props.books) {
     return null;
@@ -36,21 +37,37 @@ const Books = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {props.books.map((a) => {
-                if (a.genres.includes(filter) || filter === 'All') {
-                  return (
-                    <TableRow key={a.title}>
-                      <TableCell align="left">{a.title}</TableCell>
-                      <TableCell align="left">{a.author.name}</TableCell>
-                      <TableCell align="right">{a.published}</TableCell>
-                    </TableRow>
-                  );
-                }
-              })}
+              {filteredBooks
+                ? filteredBooks.map((a) => {
+                    return (
+                      <TableRow key={a.title}>
+                        <TableCell align="left">{a.title}</TableCell>
+                        <TableCell align="left">{a.author.name}</TableCell>
+                        <TableCell align="right">{a.published}</TableCell>
+                      </TableRow>
+                    );
+                  })
+                : props.books.map((a) => {
+                    if (a.genres.includes(filter) || filter === "All") {
+                      return (
+                        <TableRow key={a.title}>
+                          <TableCell align="left">{a.title}</TableCell>
+                          <TableCell align="left">{a.author.name}</TableCell>
+                          <TableCell align="right">{a.published}</TableCell>
+                        </TableRow>
+                      );
+                    }
+                  })}
             </TableBody>
           </Table>
         </TableContainer>
-        <GenresBar setFilter={setFilter} genres={props.genres} />
+        <GenresBar
+          setFilter={setFilter}
+          filter={filter}
+          genres={props.genres}
+          setFilteredBooks={setFilteredBooks}
+          filterGenre={props.filterGenre}
+        />
       </Paper>
     </>
   );
