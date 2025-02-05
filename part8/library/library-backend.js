@@ -122,7 +122,8 @@ const typeDefs = `
     id: ID!
   },
   type Token {
-    value: String!
+      returnToken: String!,
+      favoriteGenre: String!
   },
   type Book {
     title: String!,
@@ -136,6 +137,9 @@ const typeDefs = `
     bookCount: Int,
     born: Int,
     id: ID!
+  },
+  type Genre {
+    genre: String!
   },
   type Mutation {
     addBook(
@@ -162,12 +166,22 @@ const typeDefs = `
       username: String!
       password: String!
     ): Token,
+    editFavGenre(
+      token: String!
+      favoriteGenre: String!
+    ): Genre,
     reset(
       reset: Boolean!
     ): Boolean
   }
 `;
-
+/* 
+mutation editFavGenre($token: String!, $favoriteGenre) {
+  editFavGenre(token: $token, favoriteGenre: $favoriteGenre) {
+    favoriteGenre
+  }
+}
+ */
 const resolvers = {
   Query: {
     authorCount: async () => Author.collection.countDocuments(),
@@ -215,7 +229,7 @@ const resolvers = {
       return result; */
 
       const result = await Author.find({});
-      return result
+      return result;
     },
     me: async () => {
       const me = await User.findOne();
@@ -359,7 +373,20 @@ const resolvers = {
         id: user._id,
       };
 
-      return { value: jwt.sign(userForToken, process.env.SECRET) };
+      const returnToken = jwt.sign(userForToken, process.env.SECRET);
+
+      return { returnToken, favoriteGenre: user.favoriteGenre };
+    },
+    editFavGenre: async (root, args) => {
+      const decodedToken = jwt.verify(args.token, process.env.SECRET);
+
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: decodedToken.id },
+        { favoriteGenre: args.favoriteGenre },
+        { new: true }
+      );
+
+      return { genre: updatedUser.favoriteGenre };
     },
     //TODO: remove this functionality
     reset: async () => {

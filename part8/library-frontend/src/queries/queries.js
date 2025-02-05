@@ -52,10 +52,19 @@ export const UPDATE_AUTHOR = gql`
   }
 `;
 
+export const UPDATE_FAV_GENRE = gql`
+  mutation editFavGenre($token: String!, $favoriteGenre: String!) {
+    editFavGenre(token: $token, favoriteGenre: $favoriteGenre) {
+      genre
+    }
+  }
+`;
+
 export const LOGIN = gql`
   mutation login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
-      value
+      returnToken
+      favoriteGenre
     }
   }
 `;

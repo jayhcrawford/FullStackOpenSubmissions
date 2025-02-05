@@ -11,7 +11,7 @@ const NewBook = (props) => {
   const [author, setAuthor] = useState("Jerrod");
   const [published, setPublished] = useState("");
   const [genre, setGenre] = useState("");
-  const [genres, setGenres] = useState(["swagness", "swaggery"]);
+  const [genres, setGenres] = useState([]);
 
   if (!props.show) {
     return null;
@@ -19,7 +19,7 @@ const NewBook = (props) => {
 
   const submit = async (event) => {
     event.preventDefault();
-    const token = props.token;
+    const token = props.token.returnToken;
 
     props.createBook({
       variables: { token, title, author, published, genres },
@@ -33,7 +33,7 @@ const NewBook = (props) => {
   };
 
   const addGenre = () => {
-    setGenres(genres.concat(genre));
+    setGenres(genres.concat(genre.toLowerCase()));
     setGenre("");
   };
 

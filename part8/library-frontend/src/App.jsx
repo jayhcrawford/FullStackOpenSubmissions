@@ -11,16 +11,22 @@ import {
   CREATE_BOOK,
   UPDATE_AUTHOR,
   LOGIN,
+  UPDATE_FAV_GENRE,
 } from "./queries/queries";
 
 import { Button, ButtonGroup } from "@mui/material";
 import Login from "./components/Login";
+import Recommendations from "./components/Recommendations";
 
 const App = () => {
   //console.trace()
   const books = useQuery(ALL_BOOKS);
   const authors = useQuery(ALL_AUTHORS);
   const [token, setToken] = useState(null);
+
+  if (typeof token == "string") {
+    setToken(JSON.parse(token));
+  }
 
   const navigate = useNavigate();
 
@@ -40,6 +46,8 @@ const App = () => {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
   });
 
+  const [updateFavGenre] = useMutation(UPDATE_FAV_GENRE)
+
   const [login] = useMutation(LOGIN);
 
   let booksArray = [];
@@ -57,10 +65,10 @@ const App = () => {
     const password = event.target.passwordInput.value;
     const result = await login({ variables: { username, password } });
     if (result) {
-      setToken(result.data.login.value);
+      setToken(result.data.login);
 
       //TODO: do not leave token functionality relying on local storage
-      localStorage.setItem("LoginToken", result.data.login.value);
+      localStorage.setItem("LoginToken", JSON.stringify(result.data.login));
       navigate("/");
     }
     //TODO: if !result, credentials incorrect, throw notification
@@ -112,9 +120,18 @@ const App = () => {
             <Button>Books</Button>
           </Link>
           {token && (
-            <Link to="/addBook">
-              <Button>Add Book</Button>
-            </Link>
+            <>
+              <Link to="/addBook">
+                <Button>Add Book</Button>
+              </Link>
+            </>
+          )}
+          {token && (
+            <>
+              <Link to="/recommend">
+                <Button>Recommendations</Button>
+              </Link>
+            </>
           )}
         </ButtonGroup>
         {!token && (
@@ -166,6 +183,20 @@ const App = () => {
         <Route
           path="/books"
           element={<Books show={true} books={booksArray} genres={allGenres} />}
+        />
+
+        <Route
+          path="/recommend"
+          element={
+            <Recommendations
+              show={true}
+              books={booksArray}
+              genres={allGenres}
+              token={token}
+              updateFavGenre={updateFavGenre}
+              setToken={setToken}
+            />
+          }
         />
 
         {/* If user is logged in, show addBook functionality */}
