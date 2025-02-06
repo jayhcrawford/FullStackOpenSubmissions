@@ -23,7 +23,7 @@ const App = () => {
   //console.trace()
   const books = useQuery(ALL_BOOKS);
   const authors = useQuery(ALL_AUTHORS);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(null); 
 
   if (typeof token == "string") {
     setToken(JSON.parse(token));

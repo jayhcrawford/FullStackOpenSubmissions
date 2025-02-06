@@ -65,8 +65,11 @@ const typeDefs = `
     ): Genre,
     reset(
       reset: Boolean!
-    ): Boolean
-  }
-`
+    ): Boolean,
+  },
+  type Subscription {
+      bookAdded: Book
+    }    
+`;
 
 module.exports = typeDefs;

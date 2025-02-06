@@ -1,8 +1,8 @@
+const { PubSub } = require('graphql-subscriptions')
+const pubsub = new PubSub()
+
 const { GraphQLError } = require("graphql");
 const { v1: uuid } = require("uuid");
-
-const mongoose = require("mongoose");
-
 const jwt = require("jsonwebtoken");
 
 const Author = require("./models/author");
@@ -38,24 +38,6 @@ const resolvers = {
       return libraryWithAuthorData;
     },
     allAuthors: async () => {
-      /*   let result = [];
-      authors.forEach((author) => {
-        let newAuthor = {
-          name: author.name,
-          born: author.born,
-          bookCount: 0,
-        };
-
-        books.forEach((book) => {
-          if (book.author == author.name) {
-            newAuthor.bookCount = newAuthor.bookCount + 1;
-          }
-        });
-
-        result.push(newAuthor);
-      });
-      return result; */
-
       const result = await Author.find({});
       return result;
     },
@@ -146,6 +128,11 @@ const resolvers = {
           },
         });
       }
+
+
+
+      pubsub.publish('BOOK_CREATED', { bookAdded: book })
+
       return book;
     },
     addAuthor: async (root, args) => {
@@ -248,6 +235,11 @@ const resolvers = {
       await Author.deleteMany({});
 
       return true;
+    },
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterableIterator(['BOOK_CREATED'])
     },
   },
 };

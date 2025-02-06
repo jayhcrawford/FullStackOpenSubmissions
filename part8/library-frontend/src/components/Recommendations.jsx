@@ -11,19 +11,29 @@ import GenresBar from "./GenresBar";
 import { useState } from "react";
 import { Button, TextField } from "@mui/material";
 
+import { useEffect } from "react";
+
 const Recommendations = (props) => {
   const [filter, setFilter] = useState(null);
   const [favoriteGenre, setFavoriteGenre] = useState(null);
   const [newFavGenre, setNewFavGenre] = useState("");
   const [filteredBooks, setFilteredBooks] = useState(null);
+  const [sorryNoBooks, setSorryNoBooks] = useState(false);
 
   if (!props.show || !props.books || !props.token) {
     return null;
-  } else {
-    if (favoriteGenre == null) {
-      setFavoriteGenre(props.token.favoriteGenre);
-      setFilter(props.token.favoriteGenre);
-    }
+  }
+
+  //if the user's favorite genre is not contained in the library's genres, default filter to 'All'
+  if (filter == null && props.genres.includes(props.token.favoriteGenre)) {
+    setFilter(props.token.favoriteGenre)
+  } else if (filter == null && !props.genres.includes(props.token.favoriteGenre)) {
+    setFilter('All')
+  }
+
+  //if the favorite genre is not in state, set it from localStorage token
+  if (!favoriteGenre) {
+    setFavoriteGenre(props.token.favoriteGenre)
   }
 
   const handleInputNewFav = (event) => {
@@ -54,6 +64,16 @@ const Recommendations = (props) => {
         <p>
           your favorite genre is: <b>{favoriteGenre}</b>
         </p>
+        {sorryNoBooks && (
+          <>
+            <br />{" "}
+            <p>
+              <i>
+                Sorry, it looks like there are no books in your favorite genre
+              </i>
+            </p>
+          </>
+        )}
         <br />
         <p>pick a new favorite genre: </p>
 
