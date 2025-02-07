@@ -1,3 +1,35 @@
+interface UserValues {
+  days: Array<number>;
+  target: number;
+}
+
+//user inputs array at command line as a string, parse it to Array<number>
+const convertStringArrayIntoNumArray = (
+  numsInString: string
+): Array<number> => {
+  let numsArray = numsInString
+    .split(/[\s,]+/)
+    .map((item) => parseFloat(item))
+    .filter((item) => !isNaN(item));
+  return numsArray;
+};
+
+//parse arg2 to number, and call convertStringArrayIntoNumArray to parse arg1 into Array<number>
+const parseArguments = (arg1: string, arg2: string): UserValues => {
+  const daysArray = convertStringArrayIntoNumArray(arg1);
+
+  if (Array.isArray(daysArray) && !isNaN(Number(arg2))) {
+    return {
+      days: daysArray,
+      target: parseInt(arg2),
+    };
+  } else {
+    throw new Error(
+      'Provided values were not properly formatted! Proper argument format: "[0, 0, 0, 0, 0]" 2'
+    );
+  }
+};
+
 const calculateExercises = (hours: number[], target: number): Object => {
   //get the actual training days
   let trainingDays = [];
@@ -19,10 +51,6 @@ const calculateExercises = (hours: number[], target: number): Object => {
   };
 
   let success = false;
-  //if they worked out every day, they succeeded regardless of stats
-  if (hours.length == trainingDays.length) {
-    success = true;
-  }
 
   let feedback = "something is wrong with your data...";
 
@@ -54,7 +82,29 @@ const calculateExercises = (hours: number[], target: number): Object => {
     average: averageTrainingHours(hours),
   };
 
+  //if they worked out every day, or exceeded the expeceted target they succeeded
+  if (hours.length == trainingDays.length || results.target < results.average) {
+    results.success = true;
+  }
+
   return results;
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const userInputtedVals: UserValues = parseArguments(
+    process.argv[2],
+    process.argv[3]
+  );
+
+  console.log(
+    calculateExercises(userInputtedVals.days, userInputtedVals.target)
+  );
+} catch (error: unknown) {
+  let errorMessage = "Something bad happened.";
+  if (error instanceof Error) {
+    errorMessage += " Error: " + error.message;
+  }
+  console.log(errorMessage);
+}
+
+export default calculateExercises;
