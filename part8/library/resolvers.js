@@ -239,7 +239,7 @@ const resolvers = {
   },
   Subscription: {
     bookAdded: {
-      subscribe: () => pubsub.asyncIterableIterator(['BOOK_CREATED'])
+      subscribe: () => pubsub.asyncIterableIterator('BOOK_CREATED')
     },
   },
 };
