@@ -3,6 +3,14 @@ interface UserValues {
   weight: number;
 }
 
+let main: boolean;
+
+if (require.main === module) {
+  main = true;
+} else {
+  main = false;
+}
+
 const parseArguments = (arg1: string, arg2: string): UserValues => {
   if (!isNaN(Number(arg1)) && !isNaN(Number(arg2))) {
     return {
@@ -36,19 +44,22 @@ const calculateBmi = (height: number, weight: number): string => {
   return determineRange(weight / denom);
 };
 
-try {
-  const userInputtedVals: UserValues = parseArguments(
-    process.argv[2],
-    process.argv[3]
-  );
+if (main) {
+  try {
+    const userInputtedVals: UserValues = parseArguments(
+      process.argv[2],
+      process.argv[3]
+    );
 
-  console.log(calculateBmi(userInputtedVals.height, userInputtedVals.weight));
-} catch (error: unknown) {
-  let errorMessage = "Something bad happened.";
-  if (error instanceof Error) {
-    errorMessage += " Error: " + error.message;
+    console.log(calculateBmi(userInputtedVals.height, userInputtedVals.weight));
+  } catch (error: unknown) {
+    let errorMessage = "Something bad happened.";
+    if (error instanceof Error) {
+      errorMessage += " Error: " + error.message;
+    }
+    console.log(errorMessage);
   }
-  console.log(errorMessage);
 }
+
 
 export default calculateBmi;
