@@ -1,14 +1,13 @@
 import express from "express";
 import cors from "cors";
+import axios from "axios";
 
 import { v1 as uuid } from "uuid";
 const id = uuid();
 
-
-import * as patientData from "./patients/patients";
-import * as diagnosisData from "./diagnoses/diagnoses";
-
 import { Patient, PatientWithoutSSN, Diagnosis } from "./types";
+
+const serverBaseURL = "http://localhost:3000"
 
 
 const app = express();
@@ -20,29 +19,51 @@ app.get("/api/ping", (_req, res) => {
   res.send("pong");
 });
 
-app.get("/api/patients", (_req, res) => {
-  const patientResponse: Patient[] = [];
+app.get("/api/patients", async (_req, res) => {
+  try {
+    const fetchResults = await axios.get(`${serverBaseURL}/patients`);
+    const queryPatients: Array<Patient> = fetchResults.data;
 
-  patientData.default.forEach((patient) => {
-    const filteredPatient: PatientWithoutSSN = {
-      id: patient.id,
-      name: patient.name,
-      occupation: patient.occupation,
-      dateOfBirth: patient.dateOfBirth,
-      gender: patient.gender,
-    };
-    patientResponse.push(filteredPatient);
-  });
+    const patientResponse: Patient[] = [];
 
-  res.json(patientResponse);
+    queryPatients.forEach((patient) => {
+      const filteredPatient: PatientWithoutSSN = {
+        id: patient.id,
+        name: patient.name,
+        occupation: patient.occupation,
+        dateOfBirth: patient.dateOfBirth,
+        gender: patient.gender,
+      };
+      patientResponse.push(filteredPatient);
+    });
+
+    res.status(200).json(patientResponse);
+
+  } catch (error) {
+    console.log(error)
+    res.status(404).json({ error })
+  }
+
 });
 
-app.get("/api/diagnoses", (_req, res) => {
-  const diagnosesResponse: Diagnosis[] = [];
-  diagnosisData.default.map((diagnosis) => {
-    diagnosesResponse.push(diagnosis);
-  });
-  res.json(diagnosesResponse);
+
+app.get("/api/diagnoses", async (_req, res) => {
+  try {
+    const fetchResults = await axios.get(`${serverBaseURL}/diagnoses`);
+    const queryDiagnoses: Array<Diagnosis> = fetchResults.data;
+
+    const diagnosesResponse: Diagnosis[] = [];
+    queryDiagnoses.map((diagnosis) => {
+      diagnosesResponse.push(diagnosis);
+    });
+    res.json(diagnosesResponse);
+    res.status(200).json(diagnosesResponse);
+
+  } catch (error) {
+    console.log(error)
+    res.status(404).json({ error })
+  }
+
 });
 
 app.post("/api/patients", (req, res) => {
