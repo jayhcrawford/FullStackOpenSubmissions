@@ -1,12 +1,15 @@
 import express from "express";
 import cors from "cors";
+
 import { v1 as uuid } from "uuid";
 const id = uuid();
+
 
 import * as patientData from "./patients/patients";
 import * as diagnosisData from "./diagnoses/diagnoses";
 
 import { Patient, PatientWithoutSSN, Diagnosis } from "./types";
+
 
 const app = express();
 app.use(cors());
@@ -48,6 +51,7 @@ app.post("/api/patients", (req, res) => {
   req.body.id = id;
 
   res.status(201).json({ success: "success" });
+
 });
 
 const PORT = 3001;
