@@ -11,26 +11,35 @@ interface CoursePartBase {
   exerciseCount: number;
 }
 
-interface CourseWithDescription extends CoursePartBase {
+interface Variants extends CoursePartBase {
   description?: string;
+  backgroundMaterial?: string;
+  groupProjectCount?: number;
+  requirements?: Array<string>;
 }
 
-interface CoursePartBasic extends CourseWithDescription {
+interface CoursePartBasic extends Variants {
   kind: "basic";
 }
 
-interface CoursePartGroup extends CoursePartBase {
-  groupProjectCount: number;
+interface CoursePartGroup extends Variants {
   kind: "group";
 }
 
-interface CoursePartBackground extends CourseWithDescription {
-  backgroundMaterial: string;
+interface CoursePartBackground extends Variants {
   kind: "background";
 }
 
-type CoursePart = CoursePartBasic | CoursePartBackground | CoursePartGroup;
+interface SpecialCourse extends Variants {
+  kind: "special";
+}
 
+type CoursePart =
+  | SpecialCourse
+  | CoursePartBasic
+  | CoursePartBackground
+  | CoursePartGroup;
+ 
 interface TotalProps {
   totalExercises: number;
 }
@@ -57,6 +66,7 @@ const Part = (props: PartProps) => {
         <li key={`${props.name}+${props.exerciseCount}`}>
           <h4>{props.name}</h4>
           <p>{props.description}</p>
+          <p>{props.exerciseCount} Exercises</p>
         </li>
       );
     case "group":
@@ -64,13 +74,17 @@ const Part = (props: PartProps) => {
         <li key={`${props.name}+${props.exerciseCount}`}>
           {" "}
           <h4>{props.name}</h4>
+          <p>{props.exerciseCount} Exercises</p>
+          <p>{props.groupProjectCount} Group Projects</p>
         </li>
       );
     case "background":
       return (
         <li key={`${props.name}+${props.exerciseCount}`}>
-          {" "}
           <h4>{props.name}</h4>
+          <p>{props.description}</p>
+          <p>{props.exerciseCount} Exercises</p>
+          <p>{props.backgroundMaterial}</p>
         </li>
       );
     default:
@@ -90,6 +104,8 @@ const Content = (props: ContentProps) => {
               kind={course.kind}
               exerciseCount={course.exerciseCount}
               description={course.description}
+              backgroundMaterial={course.backgroundMaterial}
+              groupProjectCount={course.groupProjectCount}
             />
           );
 
@@ -108,7 +124,12 @@ const Total = (props: TotalProps) => {
 const App = () => {
   const courseName = "Half Stack application development";
 
-  const courseParts: CoursePart[] = [
+  const courseParts: (
+    | CoursePartBasic
+    | CoursePartGroup
+    | CoursePartBackground
+    | SpecialCourse
+  )[] = [
     {
       name: "Fundamentals",
       exerciseCount: 10,
@@ -140,6 +161,13 @@ const App = () => {
       exerciseCount: 10,
       description: "a hard part",
       kind: "basic",
+    },
+    {
+      name: "Backend development",
+      exerciseCount: 21,
+      description: "Typing the backend",
+      requirements: ["nodejs", "jest"],
+      kind: "special",
     },
   ];
 
