@@ -3,7 +3,7 @@ import cors from "cors";
 import axios from "axios";
 
 import { v1 as uuid } from "uuid";
-const id = uuid();
+
 
 import { Patient, PatientWithoutSSN, Diagnosis } from "./types";
 
@@ -46,6 +46,19 @@ app.get("/api/patients", async (_req, res) => {
 
 });
 
+app.post("/api/patients", async (req, res) => {
+
+  try {
+    req.body.id = uuid();
+    const postPatient = await axios.post(`${serverBaseURL}/patients`, req.body);
+    res.status(201).json( postPatient.data );
+  } catch (error) {
+    console.log(error)
+    res.status(404).json({ error })
+  }
+
+});
+
 
 app.get("/api/diagnoses", async (_req, res) => {
   try {
@@ -66,14 +79,7 @@ app.get("/api/diagnoses", async (_req, res) => {
 
 });
 
-app.post("/api/patients", (req, res) => {
-  console.log(req.body);
 
-  req.body.id = id;
-
-  res.status(201).json({ success: "success" });
-
-});
 
 const PORT = 3001;
 

@@ -39,81 +39,104 @@
       "ssn": "090471-8890",
       "gender": "male",
       "occupation": "Digital evangelist"
+    },
+    {
+      "id": "50073140-e5d8-11ef-b730-f17b8e4fa22e",
+      "name": "Jay",
+      "occupation": "Working",
+      "ssn": "1212-12-12",
+      "dateOfBirth": "1212-12-12",
+      "gender": "other"
     }
   ],
   "diagnoses": [
     {
       "code": "M24.2",
       "name": "Disorder of ligament",
-      "latin": "Morbositas ligamenti"
+      "latin": "Morbositas ligamenti",
+      "id": "f60f"
     },
     {
       "code": "M51.2",
       "name": "Other specified intervertebral disc displacement",
-      "latin": "Alia dislocatio disci intervertebralis specificata"
+      "latin": "Alia dislocatio disci intervertebralis specificata",
+      "id": "e6c7"
     },
     {
       "code": "S03.5",
       "name": "Sprain and strain of joints and ligaments of other and unspecified parts of head",
-      "latin": "Distorsio et/sive distensio articulationum et/sive ligamentorum partium aliarum sive non specificatarum capitis"
+      "latin": "Distorsio et/sive distensio articulationum et/sive ligamentorum partium aliarum sive non specificatarum capitis",
+      "id": "e302"
     },
     {
       "code": "J10.1",
       "name": "Influenza with other respiratory manifestations, other influenza virus codeentified",
-      "latin": "Influenza cum aliis manifestationibus respiratoriis ab agente virali codeentificato"
+      "latin": "Influenza cum aliis manifestationibus respiratoriis ab agente virali codeentificato",
+      "id": "3890"
     },
     {
       "code": "J06.9",
       "name": "Acute upper respiratory infection, unspecified",
-      "latin": "Infectio acuta respiratoria superior non specificata"
+      "latin": "Infectio acuta respiratoria superior non specificata",
+      "id": "044d"
     },
     {
       "code": "Z57.1",
-      "name": "Occupational exposure to radiation"
+      "name": "Occupational exposure to radiation",
+      "id": "8b6b"
     },
     {
       "code": "N30.0",
       "name": "Acute cystitis",
-      "latin": "Cystitis acuta"
+      "latin": "Cystitis acuta",
+      "id": "e606"
     },
     {
       "code": "H54.7",
       "name": "Unspecified visual loss",
-      "latin": "Amblyopia NAS"
+      "latin": "Amblyopia NAS",
+      "id": "17d4"
     },
     {
       "code": "J03.0",
       "name": "Streptococcal tonsillitis",
-      "latin": "Tonsillitis (palatina) streptococcica"
+      "latin": "Tonsillitis (palatina) streptococcica",
+      "id": "604b"
     },
     {
       "code": "L60.1",
       "name": "Onycholysis",
-      "latin": "Onycholysis"
+      "latin": "Onycholysis",
+      "id": "97c5"
     },
     {
       "code": "Z74.3",
-      "name": "Need for continuous supervision"
+      "name": "Need for continuous supervision",
+      "id": "a469"
     },
     {
       "code": "L20",
       "name": "Atopic dermatitis",
-      "latin": "Atopic dermatitis"
+      "latin": "Atopic dermatitis",
+      "id": "d29f"
     },
     {
       "code": "F43.2",
       "name": "Adjustment disorders",
-      "latin": "Perturbationes adaptationis"
+      "latin": "Perturbationes adaptationis",
+      "id": "3ae9"
     },
     {
       "code": "S62.5",
       "name": "Fracture of thumb",
-      "latin": "Fractura [ossis/ossium] pollicis"
+      "latin": "Fractura [ossis/ossium] pollicis",
+      "id": "56c3"
     },
     {
       "code": "H35.29",
       "name": "Other proliferative retinopathy",
-      "latin": "Alia retinopathia proliferativa"
+      "latin": "Alia retinopathia proliferativa",
+      "id": "ebfe"
     }
   ]
 }
