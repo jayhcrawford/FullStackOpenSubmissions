@@ -10,11 +10,11 @@ import HealthRatingBar from "../HealthRatingBar";
 import patientService from "../../services/patients";
 
 interface Props {
-  patients : Patient[]
+  patients: Patient[]
   setPatients: React.Dispatch<React.SetStateAction<Patient[]>>
 }
 
-const PatientListPage = ({ patients, setPatients } : Props ) => {
+const PatientListPage = ({ patients, setPatients }: Props) => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
@@ -47,6 +47,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
     }
   };
 
+
   return (
     <div className="App">
       <Box>
@@ -73,7 +74,8 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
                 <HealthRatingBar showText={false} rating={1} />
               </TableCell>
             </TableRow>
-          ))}
+          )
+          )}
         </TableBody>
       </Table>
       <AddPatientModal
