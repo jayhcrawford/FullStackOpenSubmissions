@@ -1,5 +1,5 @@
-const { PubSub } = require('graphql-subscriptions')
-const pubsub = new PubSub()
+const { PubSub } = require("graphql-subscriptions");
+const pubsub = new PubSub();
 
 const { GraphQLError } = require("graphql");
 const { v1: uuid } = require("uuid");
@@ -8,7 +8,6 @@ const jwt = require("jsonwebtoken");
 const Author = require("./models/author");
 const Book = require("./models/book");
 const User = require("./models/user");
-
 
 const resolvers = {
   Query: {
@@ -129,9 +128,32 @@ const resolvers = {
         });
       }
 
+      /*       type Author {
+        name: String!,
+        bookCount: Int,
+        born: Int,
+        id: ID!
+      },  type Author {
+        name: String!,
+        bookCount: Int,
+        born: Int,
+        id: ID!
+      },
+ */
+      const authorDetails = await Author.findOne({ name: book.author });
 
+      const name = book.author;
 
-      pubsub.publish('BOOK_CREATED', { bookAdded: book })
+      console.log(authorDetails);
+
+      const bookWithAuthorDetails = {
+        ...book,
+        author: {
+          name: name,
+        },
+      };
+
+      pubsub.publish("BOOK_CREATED", { bookAdded: bookWithAuthorDetails });
 
       return book;
     },
@@ -239,7 +261,7 @@ const resolvers = {
   },
   Subscription: {
     bookAdded: {
-      subscribe: () => pubsub.asyncIterableIterator('BOOK_CREATED')
+      subscribe: () => pubsub.asyncIterableIterator(['BOOK_CREATED'])
     },
   },
 };

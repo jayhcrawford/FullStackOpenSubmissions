@@ -18,9 +18,6 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { Form } from "react-router-dom";
-import { UPDATE_AUTHOR } from "../queries/queries";
-import { useMutation } from "@apollo/client";
 
 export function BasicSelect(props) {
   const [name, setName] = React.useState("");
@@ -58,7 +55,8 @@ const Authors = (props) => {
   const handleSubmitBirthyear = (event) => {
     event.preventDefault();
     const setBornTo = birthyear;
-    const token = props.token;
+    const token = props.token.returnToken;
+
     const name = event.target.authorInput.value;
 
     props.updateAuthor({ variables: { token, name, setBornTo } });

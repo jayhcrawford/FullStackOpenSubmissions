@@ -13,7 +13,7 @@ const schema = new mongoose.Schema({
     type: Number,
   },
   author: {
-    type: String
+    name: String
   },
   id: {
     type: mongoose.Schema.Types.ObjectId,

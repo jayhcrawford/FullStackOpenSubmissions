@@ -4,7 +4,12 @@ import NewBook from "./components/NewBook";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { useMutation, useQuery, useApolloClient } from "@apollo/client";
+import {
+  useMutation,
+  useQuery,
+  useApolloClient,
+  useSubscription,
+} from "@apollo/client";
 import {
   ALL_AUTHORS,
   ALL_BOOKS,
@@ -13,25 +18,59 @@ import {
   LOGIN,
   UPDATE_FAV_GENRE,
   GENRE_FILTER_BOOKS,
+  BOOK_ADDED,
 } from "./queries/queries";
 
 import { Button, ButtonGroup } from "@mui/material";
 import Login from "./components/Login";
 import Recommendations from "./components/Recommendations";
+import Notification from "./components/Notification";
+
+// function that takes care of manipulating cache
+export const updateCache = (cache, query, addedBook) => {
+  // helper that is used to eliminate saving same person twice
+  const uniqByName = (a) => {
+    let seen = new Set();
+    return a.filter((item) => {
+      console.log(item)
+      let k = item.title;
+      return seen.has(k) ? false : seen.add(item);
+    });
+  };
+
+  cache.updateQuery(query, ({ allBooks }) => {
+    return {
+      allBooks: uniqByName(allBooks.concat(addedBook)),
+    };
+  });
+};
 
 const App = () => {
   //console.trace()
   const books = useQuery(ALL_BOOKS);
   const authors = useQuery(ALL_AUTHORS);
-  const [token, setToken] = useState(null); 
+  const [token, setToken] = useState(null);
+  const [visibleNotification, setVisibleNotification] = useState({
+    visible: false,
+    message: null,
+  });
+
+  const client = useApolloClient();
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      if (Object.hasOwn(data.data, "bookAdded")) {
+        createNotification(data.data.bookAdded);
+      }
+      updateCache(client.cache, { query: ALL_BOOKS }, data.data.bookAdded);
+    },
+  });
 
   if (typeof token == "string") {
     setToken(JSON.parse(token));
   }
 
   const navigate = useNavigate();
-
-  const client = useApolloClient();
 
   useEffect(() => {
     if (localStorage.getItem("LoginToken")) {
@@ -46,7 +85,9 @@ const App = () => {
   });
 
   const [createBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+    update: (cache, response) => {
+      updateCache(cache, { query: ALL_BOOKS }, response.data.addPerson);
+    },
   });
 
   const [updateFavGenre] = useMutation(UPDATE_FAV_GENRE);
@@ -100,8 +141,27 @@ const App = () => {
     allGenres = getAllGenres(booksArray);
   }
 
+  const createNotification = (book) => {
+    console.log(book);
+    setVisibleNotification({
+      visible: true,
+      message: book.title,
+    });
+
+    setTimeout(() => {
+      setVisibleNotification({
+        visible: false,
+        message: null,
+      });
+    }, 20000);
+  };
+
   return (
     <>
+      <Notification
+        visibleNotification={visibleNotification}
+        setVisibleNotification={setVisibleNotification}
+      />
       <header style={{ backgroundColor: "lightGrey", padding: 20, margin: 0 }}>
         <ButtonGroup
           sx={{
