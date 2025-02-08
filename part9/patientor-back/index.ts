@@ -6,6 +6,7 @@ import { v1 as uuid } from "uuid";
 
 
 import { Patient, PatientWithoutSSN, Diagnosis } from "./types";
+import { createNewPatientFromUnknown } from "./utils";
 
 const serverBaseURL = "http://localhost:3000"
 
@@ -51,7 +52,9 @@ app.post("/api/patients", async (req, res) => {
   try {
     req.body.id = uuid();
     const postPatient = await axios.post(`${serverBaseURL}/patients`, req.body);
-    res.status(201).json( postPatient.data );
+    const newPatient = createNewPatientFromUnknown(postPatient.data)
+
+    res.status(201).json(newPatient);
   } catch (error) {
     console.log(error)
     res.status(404).json({ error })
