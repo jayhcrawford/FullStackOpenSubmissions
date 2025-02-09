@@ -49,8 +49,15 @@ const DiaryRender = (props: DiaryProps) => {
 const DiaryForm = (props: DiaryFormProps) => {
   const [submitDiaryError, setSubmitDiaryError] = useState<string>("");
 
+  const [selectedWeather, setSelectedWeather] = useState<string | null>(null);
+
+  const [selectedVisibility, setSelectedVisibility] = useState<string | null>(
+    null
+  );
+
   const handleSubmitDiary = async (event: React.SyntheticEvent) => {
     event.preventDefault();
+
     const target = event.target as typeof event.target & {
       date: { value: string };
       visibility: { value: string };
@@ -74,8 +81,10 @@ const DiaryForm = (props: DiaryFormProps) => {
     } else if (Object.hasOwn(result, "id")) {
       props.updateDiaryListState(result);
       target.date.value = "";
-      target.visibility.value = "";
-      target.weather.value = "";
+
+      setSelectedVisibility(null);
+      setSelectedWeather(null);
+
       target.comment.value = "";
     } else {
       //is error object
@@ -93,15 +102,114 @@ const DiaryForm = (props: DiaryFormProps) => {
       <p style={{ color: "red" }}>{submitDiaryError}</p>
       <form onSubmit={(event) => handleSubmitDiary(event)}>
         <span>
-          Date: <input name="date"></input>
+          Date: <input type="date" name="date"></input>
         </span>
         <br />
         <span>
-          Visibility: <input name="visibility"></input>
+          Visibility:{" "}
+          <label htmlFor="great">
+            <input
+              checked={selectedVisibility === "great"}
+              type="radio"
+              id="great"
+              name="visibility"
+              value="great"
+              onChange={() => setSelectedVisibility("great")}
+            />
+            great
+          </label>
+          <label htmlFor="good">
+            <input
+              checked={selectedVisibility === "good"}
+              type="radio"
+              id="good"
+              name="visibility"
+              value="good"
+              onChange={() => setSelectedVisibility("good")}
+            />
+            good
+          </label>
+          <label htmlFor="ok">
+            <input
+              checked={selectedVisibility === "ok"}
+              type="radio"
+              id="ok"
+              name="visibility"
+              value="ok"
+              onChange={() => setSelectedVisibility("ok")}
+            />
+            ok
+          </label>
+          <label htmlFor="poor">
+            <input
+              checked={selectedVisibility === "poor"}
+              type="radio"
+              id="poor"
+              name="visibility"
+              value="poor"
+              onChange={() => setSelectedVisibility("poor")}
+            />
+            poor
+          </label>
         </span>
         <br />
         <span>
-          Weather: <input name="weather"></input>
+          Weather:{" "}
+          <label htmlFor="sunny">
+            <input
+              checked={selectedWeather === "sunny"}
+              type="radio"
+              id="sunny"
+              name="weather"
+              value="sunny"
+              onChange={() => setSelectedWeather("sunny")}
+            />
+            sunny
+          </label>
+          <label htmlFor="rainy">
+            <input
+              checked={selectedWeather === "rainy"}
+              type="radio"
+              id="rainy"
+              name="weather"
+              value="rainy"
+              onChange={() => setSelectedWeather("rainy")}
+            />
+            rainy
+          </label>
+          <label htmlFor="cloudy">
+            <input
+              checked={selectedWeather === "cloudy"}
+              type="radio"
+              id="cloudy"
+              name="weather"
+              value="cloudy"
+              onChange={() => setSelectedWeather("cloudy")}
+            />
+            cloudy
+          </label>
+          <label htmlFor="stormy">
+            <input
+              checked={selectedWeather === "stormy"}
+              type="radio"
+              id="stormy"
+              name="weather"
+              value="stormy"
+              onChange={() => setSelectedWeather("stormy")}
+            />
+            stormy
+          </label>
+          <label htmlFor="windy">
+            <input
+              checked={selectedWeather === "windy"}
+              type="radio"
+              id="windy"
+              name="weather"
+              value="windy"
+              onChange={() => setSelectedWeather("windy")}
+            />
+            windy
+          </label>
         </span>
         <br />
         <span>
