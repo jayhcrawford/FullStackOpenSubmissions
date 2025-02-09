@@ -5,7 +5,7 @@ import axios from "axios";
 import { v1 as uuid } from "uuid";
 
 
-import { Patient, PatientWithoutSSN, Diagnosis } from "./types";
+import { Patient, Diagnosis, NonSensitivePatient } from "./types";
 import { createNewPatientFromUnknown } from "./utils";
 
 const serverBaseURL = "http://localhost:3000"
@@ -25,10 +25,10 @@ app.get("/api/patients", async (_req, res) => {
     const fetchResults = await axios.get(`${serverBaseURL}/patients`);
     const queryPatients: Array<Patient> = fetchResults.data;
 
-    const patientResponse: Patient[] = [];
+    const patientResponse: NonSensitivePatient[] = [];
 
     queryPatients.forEach((patient) => {
-      const filteredPatient: PatientWithoutSSN = {
+      const filteredPatient: NonSensitivePatient = {
         id: patient.id,
         name: patient.name,
         occupation: patient.occupation,
@@ -39,6 +39,36 @@ app.get("/api/patients", async (_req, res) => {
     });
 
     res.status(200).json(patientResponse);
+
+  } catch (error) {
+    console.log(error)
+    res.status(404).json({ error })
+  }
+
+});
+
+app.get("/api/patients/:id", async (req, res) => {
+  const patientId = req.params.id;
+  try {
+    const fetchResults = await axios.get(`${serverBaseURL}/patients`);
+    const queryPatients: Array<Patient> = fetchResults.data;
+
+    queryPatients.map((patient) => {
+      if (patient.id === patientId) {
+        const filteredPatient: Patient = {
+          id: patient.id,
+          name: patient.name,
+          occupation: patient.occupation,
+          dateOfBirth: patient.dateOfBirth,
+          gender: patient.gender,
+          entries: [],
+          ssn: patient.ssn
+        };
+        res.status(200).json(filteredPatient);
+
+      }
+    });
+
 
   } catch (error) {
     console.log(error)

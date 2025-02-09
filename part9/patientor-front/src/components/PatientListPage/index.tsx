@@ -17,6 +17,7 @@ import AddPatientModal from "../AddPatientModal";
 import HealthRatingBar from "../HealthRatingBar";
 
 import patientService from "../../services/patients";
+import { Link } from "react-router-dom";
 
 interface Props {
   patients: Patient[];
@@ -74,6 +75,7 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
             <TableCell>Gender</TableCell>
             <TableCell>Occupation</TableCell>
             <TableCell>Health Rating</TableCell>
+            <TableCell>Details</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -84,6 +86,11 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
               <TableCell>{patient.occupation}</TableCell>
               <TableCell>
                 <HealthRatingBar showText={false} rating={1} />
+              </TableCell>
+              <TableCell>
+                <Link to={`/patients/${patient.id}`}>
+                  <button>Details</button>
+                </Link>
               </TableCell>
             </TableRow>
           ))}

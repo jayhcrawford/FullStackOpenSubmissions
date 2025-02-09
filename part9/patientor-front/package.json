@@ -15,10 +15,12 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.12",
     "@mui/material": "^5.14.12",
+    "@reduxjs/toolkit": "^2.5.1",
     "axios": "^1.5.1",
     "express": "^4.21.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^6.16.0"
   },
   "devDependencies": {
@@ -26,7 +28,7 @@
     "@stylistic/eslint-plugin": "^3.0.1",
     "@types/eslint__js": "^8.42.3",
     "@types/express": "^5.0.0",
-    "@types/react": "^18.2.15",
+    "@types/react": "^18.3.18",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",

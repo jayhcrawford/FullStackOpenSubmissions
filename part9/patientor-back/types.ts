@@ -1,3 +1,6 @@
+export interface Entry {
+}
+
 export interface Diagnosis {
   code: string;
   name: string;
@@ -17,6 +20,7 @@ export interface Patient {
   gender: string;
   dateOfBirth?: string;
   ssn?: string;
+  entries: Entry[];
 }
 
 export interface NewPatient {
@@ -29,5 +33,6 @@ export interface NewPatient {
 
 export type PatientWithoutSSN = Omit<Patient, "ssn">;
 
+export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;

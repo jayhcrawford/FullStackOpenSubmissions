@@ -17,6 +17,12 @@ export interface Patient {
   gender: Gender;
   ssn?: string;
   dateOfBirth?: string;
+  entries: Array<Diagnosis>
 }
+
+export interface StoreState {
+  patientID: null | string
+}
+
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
