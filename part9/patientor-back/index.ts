@@ -5,13 +5,10 @@ import axios from "axios";
 import { v1 as uuid } from "uuid";
 
 
-import { Patient, Diagnosis, NonSensitivePatient } from "./types";
+import { Patient, Diagnosis, NonSensitivePatient, Entry } from "./types";
 import { createNewPatientFromUnknown } from "./utils";
 
 const serverBaseURL = "http://localhost:3000"
-
-import patientData from "./patients/patients";
-
 
 const app = express();
 app.use(cors());
@@ -63,10 +60,24 @@ app.get("/api/patients/:id", async (req, res) => {
           occupation: patient.occupation,
           dateOfBirth: patient.dateOfBirth,
           gender: patient.gender,
-          entries: [],
+          entries: patient.entries,
           ssn: patient.ssn
         };
-        res.status(200).json(filteredPatient);
+
+        const checkEntries = filteredPatient.entries.map((entry: Entry) => {
+          if (entry.type == "OccupationalHealthcare" || entry.type == "Hospital" || entry.type == "HealthCheck") {
+            return entry;
+          } else {
+            return null;
+          }
+        })
+
+        const patiendWithCheckedEntries = {
+          ...filteredPatient,
+          entries: checkEntries
+        }
+
+        res.status(200).json(patiendWithCheckedEntries);
 
       }
     });
