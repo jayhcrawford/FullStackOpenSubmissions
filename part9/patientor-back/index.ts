@@ -10,6 +10,8 @@ import { createNewPatientFromUnknown } from "./utils";
 
 const serverBaseURL = "http://localhost:3000"
 
+import patientData from "./patients/patients";
+
 
 const app = express();
 app.use(cors());
@@ -92,7 +94,6 @@ app.post("/api/patients", async (req, res) => {
 
 });
 
-
 app.get("/api/diagnoses", async (_req, res) => {
   try {
     const fetchResults = await axios.get(`${serverBaseURL}/diagnoses`);
@@ -111,8 +112,6 @@ app.get("/api/diagnoses", async (_req, res) => {
   }
 
 });
-
-
 
 const PORT = 3001;
 
