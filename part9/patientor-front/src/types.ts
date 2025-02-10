@@ -27,11 +27,21 @@ export interface BaseEntry {
   date: string;
   specialist: string;
   diagnosisCodes?: Array<Diagnosis['code']>;
+  discharge?: Discharge;
+  healthCheckRating?: HealthCheckRating;
+  sickLeave?: object;
+  employerName?: string;
 }
 
 export interface HospitalEntry extends BaseEntry {
-  type: "Hospital";
-  discharge: object;
+  type: EntryType;
+  discharge?: Discharge;
+}
+
+export enum EntryType {
+  Hospital = "Hospital",
+  HealthCheck = "HealthCheck",
+  OccupationalHealthcare = "OccupationalHealthcare"
 }
 
 export enum HealthCheckRating {
@@ -42,13 +52,13 @@ export enum HealthCheckRating {
 }
 
 export interface HealthCheckEntry extends BaseEntry {
-  type: "HealthCheck";
-  healthCheckRating: HealthCheckRating;
+  type: EntryType;
+  healthCheckRating?: HealthCheckRating;
 }
 
 export interface OccupationalHealthcareEntry extends BaseEntry {
-  employerName: string;
-  type: "OccupationalHealthcare";
+  employerName?: string;
+  type: EntryType;
   sickLeave?: object;
 }
 
@@ -57,6 +67,12 @@ export type Entry =
   | HospitalEntry
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
+
+
+export interface Discharge {
+  date: string;
+  criteria: string;
+}
 
 
 export interface StoreState {
