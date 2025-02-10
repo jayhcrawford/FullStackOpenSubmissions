@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Patient, Entry } from "../../types";
+import { Patient, Entry, Diagnosis } from "../../types";
 import patientServices from "../../services/patients";
 
 interface DiagnosisCodesProps {
@@ -8,10 +8,41 @@ interface DiagnosisCodesProps {
 }
 
 const DiagnosisCodes = (props: DiagnosisCodesProps) => {
+  const { id } = useParams();
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPatientDiagnoses = async () => {
+      if (id) {
+        try {
+          const response = await patientServices.fetchDiagnoses(props.codes);
+          setDiagnoses(response);
+        } catch (error) {
+          if (error instanceof Error) {
+            setError(error.message); // Store the error message
+          } else {
+            setError("An unknown error occurred");
+          }
+        }
+      }
+    };
+
+    fetchPatientDiagnoses();
+  }, []);
+
+  if (error) {
+    return <p>There was an error fetching diagnosis data</p>;
+  }
+
   return (
     <ul>
-      {props.codes.map((code) => {
-        return <li key={code}>{code}</li>;
+      {diagnoses?.map((diagnosis) => {
+        return (
+          <li key={diagnosis.code}>
+            <b>{diagnosis.code}</b> - {diagnosis.name}
+          </li>
+        );
       })}
     </ul>
   );
@@ -21,7 +52,6 @@ const PatientDetails = () => {
   const { id } = useParams();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [error, setError] = useState<string | null>(null);
-
 
   useEffect(() => {
     const fetchPatientData = async () => {

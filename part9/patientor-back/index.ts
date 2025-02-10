@@ -114,7 +114,6 @@ app.get("/api/diagnoses", async (_req, res) => {
     queryDiagnoses.map((diagnosis) => {
       diagnosesResponse.push(diagnosis);
     });
-    res.json(diagnosesResponse);
     res.status(200).json(diagnosesResponse);
 
   } catch (error) {
