@@ -40,14 +40,14 @@ export interface BaseEntry {
   description: string;
   date: string;
   specialist: string;
-  diagnosisCodes?: Array<Diagnosis[]>;
+  diagnosisCodes?: Array<Diagnosis['code']>;
 }
 
 export interface NewEntry {
   description: string;
   date: string;
   specialist: string;
-  diagnosisCodes?: Array<Diagnosis[]>;
+  diagnosisCodes?: Array<Diagnosis['code']>;
   discharge?: Discharge;
   healthCheckRating?: HealthCheckRating;
   sickLeave?: object;

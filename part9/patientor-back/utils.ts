@@ -44,7 +44,7 @@ export const createNewEntryFromUnknown = (object: any): NewEntry | Error => {
   }
 
   const isHealthCheckRating = (param: number): param is HealthCheckRating => {
-    return Object.values(HealthCheckRating).map(v => v.toString()).includes(param);
+    return Object.values(HealthCheckRating).map(v => v).includes(param);
   };
 
   const parseHealthCheckRating = (rating: unknown): HealthCheckRating => {
@@ -53,20 +53,74 @@ export const createNewEntryFromUnknown = (object: any): NewEntry | Error => {
     }
     return rating;
   };
+
   const isString = (text: unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
   };
 
   const isNumber = (text: unknown): text is number => {
-    return typeof text === 'string' || text instanceof String;
+    return typeof text === 'number' || text instanceof Number;
   };
 
+  const isSickLeave = (object: unknown): object is Object => {
+    if (object != null && typeof object === 'object' && "startDate" in object && isString(object.startDate)) {
+      if ("endDate" in object && isString(object.endDate)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  const isDiagnosisCodes = (codes: unknown): codes is Array<string> => {
+    let checked = true;
+    if (Array.isArray(codes)) {
+      codes.forEach((code)=> {
+        if (!(typeof code === 'string')) {
+          checked = false;
+        }
+      })
+    } else {
+      checked = false;
+    }
+    return checked;
+  }
+
+
+  const isDischarge = (object: unknown): object is Object => {
+    if (object != null && typeof object === 'object' && "date" in object && isString(object.date)) {
+      if ("criteria" in object && isString(object.criteria)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   if ("specialist" in object && isString(object.specialist) && "description" in object && isString(object.description) && "date" in object && isString(object.date)) {
-    const newEntry: NewEntry = {
+    let newEntry: NewEntry = {
       ...object,
       description: z.string().parse(object.description),
       specialist: z.string().parse(object.specialist),
       date: z.string().date().parse(object.date)
+    }
+
+    if ("healthCheckRating" in object && isNumber(object.healthCheckRating) && isNumber(parseHealthCheckRating(object.healthCheckRating))) {
+      newEntry.healthCheckRating = object.healthCheckRating;
+    }
+
+    if ("employerName" in object && isString(object.employerName)) {
+      newEntry.employerName = object.employerName;
+    }
+
+    if ("sickLeave" in object && isSickLeave(object.sickLeave)) {
+      newEntry.sickLeave = object.sickLeave;
+    }
+
+    if ("discharge" in object && isDischarge(object.discharge)) {
+      newEntry.discharge = object.discharge;
+    }
+
+    if ("diagnosisCodes" in object && isDiagnosisCodes(object.diagnosisCodes)) {
+      newEntry.diagnosisCodes = object.diagnosisCodes;
     }
 
     return newEntry;

@@ -9,6 +9,7 @@ import {
   OccupationalHealthcareEntry,
 } from "../../types";
 import patientServices from "../../services/patients";
+import HealthRatingBar from "../HealthRatingBar";
 
 interface DiagnosisCodesProps {
   codes: string[];
@@ -51,6 +52,7 @@ const HealthCheckEntryComponent = (props: HealthCheckEntry) => {
         <DiagnosisCodes codes={props.diagnosisCodes} />
       ) : null}
       diagnosed by {props.specialist}
+      <HealthRatingBar showText={true} rating={props.healthCheckRating!}/>
     </div>
   );
 };
