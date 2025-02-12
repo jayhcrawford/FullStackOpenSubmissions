@@ -7,9 +7,12 @@ import {
   HospitalEntry,
   HealthCheckEntry,
   OccupationalHealthcareEntry,
+  NewEntry,
+  HealthCheckRating,
 } from "../../types";
 import patientServices from "../../services/patients";
 import HealthRatingBar from "../HealthRatingBar";
+import NewEntryModal from "../SubmitNewEntry";
 
 interface DiagnosisCodesProps {
   codes: string[];
@@ -37,6 +40,7 @@ const HospitalEntryComponent = (props: HospitalEntry) => {
   );
 };
 
+
 //HealthCheckEntryComponent
 const HealthCheckEntryComponent = (props: HealthCheckEntry) => {
   return (
@@ -52,7 +56,7 @@ const HealthCheckEntryComponent = (props: HealthCheckEntry) => {
         <DiagnosisCodes codes={props.diagnosisCodes} />
       ) : null}
       diagnosed by {props.specialist}
-      <HealthRatingBar showText={true} rating={props.healthCheckRating!}/>
+      <HealthRatingBar showText={true} rating={props.healthCheckRating!} />
     </div>
   );
 };
@@ -168,6 +172,23 @@ const PatientDetails = () => {
   const [patient, setPatient] = useState<Patient | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(null);
+  };
+
+  const submitNewPatient = async (values: NewEntry) => {
+    console.log("submit patient");
+    for (const x in values) {
+      console.log(x);
+    }
+  };
+
   useEffect(() => {
     const fetchPatientData = async () => {
       if (id) {
@@ -216,7 +237,10 @@ const PatientDetails = () => {
             </div>
           );
         })}
+        <button onClick={()=>setModalOpen(true)}>Open</button>
+        <NewEntryModal modalOpen={modalOpen} onClose={closeModal} onSubmit={submitNewPatient} />
       </>
+
     );
   }
 

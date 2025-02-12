@@ -10,6 +10,17 @@ export enum Gender {
   Other = "other"
 }
 
+export interface NewEntry {
+  description: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes?: Array<Diagnosis['code']>;
+  discharge?: Discharge;
+  healthCheckRating?: HealthCheckRating;
+  sickLeave?: object;
+  employerName?: string;
+}
+
 export interface Patient {
   id: string;
   name: string;
@@ -45,10 +56,10 @@ export enum EntryType {
 }
 
 export enum HealthCheckRating {
-  "Healthy" = 0,
-  "LowRisk" = 1,
-  "HighRisk" = 2,
-  "CriticalRisk" = 3
+  Healthy = "Healthy",
+  LowRisk = "Low Risk",
+  HighRisk = "High Risk",
+  CriticalRisk = "Critical Risk"
 }
 
 export interface HealthCheckEntry extends BaseEntry {
@@ -81,3 +92,5 @@ export interface StoreState {
 
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
+
+export type EntryFormValues = NewEntry;

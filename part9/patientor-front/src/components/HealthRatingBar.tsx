@@ -2,9 +2,10 @@ import { Rating } from '@mui/material';
 import { Favorite } from '@mui/icons-material';
 
 import { styled } from '@mui/material/styles';
+import { HealthCheckRating } from '../types';
 
 type BarProps = {
-  rating: number;
+  rating: HealthCheckRating;
   showText: boolean;
 };
 
@@ -29,12 +30,12 @@ const HealthRatingBar = ({ rating, showText }: BarProps) => {
     <div className="health-bar">
       <StyledRating
         readOnly
-        value={4 - rating}
+        value={4 - parseInt(rating)}
         max={4}
         icon={<Favorite fontSize="inherit" />}
       />
 
-      {showText ? <p>{HEALTHBAR_TEXTS[rating]}</p> : null}
+      {showText ? <p>{HEALTHBAR_TEXTS[parseInt(rating)]}</p> : null}
     </div>
   );
 };
