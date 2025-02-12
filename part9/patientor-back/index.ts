@@ -6,7 +6,7 @@ import { v1 as uuid } from "uuid";
 
 
 import { Patient, Diagnosis, NonSensitivePatient, Entry } from "./types";
-import { createNewPatientFromUnknown } from "./utils";
+import { createNewPatientFromUnknown, createNewEntryFromUnknown } from "./utils";
 
 const serverBaseURL = "http://localhost:3000"
 
@@ -98,6 +98,72 @@ app.post("/api/patients", async (req, res) => {
     const newPatient = createNewPatientFromUnknown(postPatient.data)
 
     res.status(201).json(newPatient);
+  } catch (error) {
+    console.log(error)
+    res.status(404).json({ error })
+  }
+
+});
+
+
+app.patch("/api/patients/:id/entries", async (req, res) => {
+  const patientId = req.params.id;
+  let foundPatient;
+
+  //find the patient we are changing
+  try {
+    const fetchResults = await axios.get(`${serverBaseURL}/patients`);
+    const queryPatients: Array<Patient> = fetchResults.data;
+
+    queryPatients.map((patient) => {
+      if (patient.id === patientId) {
+        const filteredPatient: Patient = {
+          id: patient.id,
+          name: patient.name,
+          occupation: patient.occupation,
+          dateOfBirth: patient.dateOfBirth,
+          gender: patient.gender,
+          entries: patient.entries,
+          ssn: patient.ssn
+        };
+
+        const checkEntries = filteredPatient.entries.map((entry: Entry) => {
+          if (entry.type == "OccupationalHealthcare" || entry.type == "Hospital" || entry.type == "HealthCheck") {
+            return entry;
+          } else {
+            return null;
+          }
+        })
+
+        const patiendWithCheckedEntries = {
+          ...filteredPatient,
+          entries: checkEntries
+        }
+
+        foundPatient = patiendWithCheckedEntries;
+
+      }
+    });
+
+  } catch (error) {
+    console.log(error)
+    res.status(404).json({ error })
+  }
+  if (!foundPatient) {
+    res.status(404).json({ error: "This patient does not exist" })
+  }
+
+  console.log(foundPatient)
+
+  createNewEntryFromUnknown(req.body)
+
+
+  try {
+    req.body.id = uuid();
+    //const postPatient = await axios.post(`${serverBaseURL}/patients`, req.body);
+    //const newPatient = createNewPatientFromUnknown(postPatient.data)
+
+    res.status(201);
   } catch (error) {
     console.log(error)
     res.status(404).json({ error })

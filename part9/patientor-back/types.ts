@@ -11,6 +11,12 @@ export enum Gender {
   Other = "other",
 }
 
+export interface Discharge {
+  date: string;
+  criteria: string;
+}
+
+
 export interface Patient {
   id: string;
   name: string;
@@ -34,7 +40,18 @@ export interface BaseEntry {
   description: string;
   date: string;
   specialist: string;
-  diagnosisCodes?: Array<Diagnosis['code']>;
+  diagnosisCodes?: Array<Diagnosis[]>;
+}
+
+export interface NewEntry {
+  description: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes?: Array<Diagnosis[]>;
+  discharge?: Discharge;
+  healthCheckRating?: HealthCheckRating;
+  sickLeave?: object;
+  employerName?: string;
 }
 
 export interface HospitalEntry extends BaseEntry {
