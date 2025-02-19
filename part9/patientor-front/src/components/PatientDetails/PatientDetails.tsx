@@ -13,6 +13,8 @@ import {
 import patientServices from "../../services/patients";
 import HealthRatingBar from "../HealthRatingBar";
 import NewEntryModal from "../SubmitNewEntry";
+import patients from "../../services/patients";
+import { ConstructionOutlined } from "@mui/icons-material";
 
 interface DiagnosisCodesProps {
   codes: string[];
@@ -183,10 +185,8 @@ const PatientDetails = () => {
   };
 
   const submitNewPatient = async (values: NewEntry) => {
-    console.log("submit patient");
-    for (const x in values) {
-      console.log(x);
-    }
+    const result = await patients.createNewEntry(values);
+    console.log(result);
   };
 
   useEffect(() => {
@@ -237,8 +237,8 @@ const PatientDetails = () => {
             </div>
           );
         })}
-        <button onClick={()=>setModalOpen(true)}>Open</button>
-        <NewEntryModal modalOpen={modalOpen} onClose={closeModal} onSubmit={submitNewPatient} />
+        <button onClick={() => setModalOpen(true)}>Open</button>
+        {id && <NewEntryModal modalOpen={modalOpen} onClose={closeModal} onSubmit={submitNewPatient}/>}
       </>
 
     );

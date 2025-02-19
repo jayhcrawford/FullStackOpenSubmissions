@@ -4,16 +4,17 @@ import axios from "axios";
 
 import { v1 as uuid } from "uuid";
 
-
 import { Patient, Diagnosis, NonSensitivePatient, Entry } from "./types";
-import { createNewPatientFromUnknown, createNewEntryFromUnknown } from "./utils";
+import {
+  createNewPatientFromUnknown,
+  createNewEntryFromUnknown,
+} from "./utils";
 
-const serverBaseURL = "http://localhost:3000"
+const serverBaseURL = "http://localhost:3000";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
 
 app.get("/api/ping", (_req, res) => {
   res.send("pong");
@@ -38,12 +39,10 @@ app.get("/api/patients", async (_req, res) => {
     });
 
     res.status(200).json(patientResponse);
-
   } catch (error) {
-    console.log(error)
-    res.status(404).json({ error })
+    console.log(error);
+    res.status(404).json({ error });
   }
-
 });
 
 app.get("/api/patients/:id", async (req, res) => {
@@ -61,50 +60,47 @@ app.get("/api/patients/:id", async (req, res) => {
           dateOfBirth: patient.dateOfBirth,
           gender: patient.gender,
           entries: patient.entries,
-          ssn: patient.ssn
+          ssn: patient.ssn,
         };
 
         const checkEntries = filteredPatient.entries.map((entry: Entry) => {
-          if (entry.type == "OccupationalHealthcare" || entry.type == "Hospital" || entry.type == "HealthCheck") {
+          if (
+            entry.type == "OccupationalHealthcare" ||
+            entry.type == "Hospital" ||
+            entry.type == "HealthCheck"
+          ) {
             return entry;
           } else {
             return null;
           }
-        })
+        });
 
         const patiendWithCheckedEntries = {
           ...filteredPatient,
-          entries: checkEntries
-        }
+          entries: checkEntries,
+        };
 
         res.status(200).json(patiendWithCheckedEntries);
-
       }
     });
-
-
   } catch (error) {
-    console.log(error)
-    res.status(404).json({ error })
+    console.log(error);
+    res.status(404).json({ error });
   }
-
 });
 
 app.post("/api/patients", async (req, res) => {
-
   try {
     req.body.id = uuid();
     const postPatient = await axios.post(`${serverBaseURL}/patients`, req.body);
-    const newPatient = createNewPatientFromUnknown(postPatient.data)
+    const newPatient = createNewPatientFromUnknown(postPatient.data);
 
     res.status(201).json(newPatient);
   } catch (error) {
-    console.log(error)
-    res.status(404).json({ error })
+    console.log(error);
+    res.status(404).json({ error });
   }
-
 });
-
 
 app.patch("/api/patients/:id/entries", async (req, res) => {
   const patientId = req.params.id;
@@ -124,51 +120,55 @@ app.patch("/api/patients/:id/entries", async (req, res) => {
           dateOfBirth: patient.dateOfBirth,
           gender: patient.gender,
           entries: patient.entries,
-          ssn: patient.ssn
+          ssn: patient.ssn,
         };
 
         const checkEntries = filteredPatient.entries.map((entry: Entry) => {
-          if (entry.type == "OccupationalHealthcare" || entry.type == "Hospital" || entry.type == "HealthCheck") {
+          if (
+            entry.type == "OccupationalHealthcare" ||
+            entry.type == "Hospital" ||
+            entry.type == "HealthCheck"
+          ) {
             return entry;
           } else {
             return null;
           }
-        })
+        });
 
         const patiendWithCheckedEntries = {
           ...filteredPatient,
-          entries: checkEntries
-        }
+          entries: checkEntries,
+        };
 
         foundPatient = patiendWithCheckedEntries;
-
       }
     });
-
   } catch (error) {
-    console.log(error)
-    res.status(404).json({ error })
+    console.log(error);
+    res.status(404).json({ error });
   }
   if (!foundPatient) {
-    res.status(404).json({ error: "This patient does not exist" })
+    res.status(404).json({ error: "This patient does not exist" });
   }
-
-  console.log(foundPatient)
-
-  createNewEntryFromUnknown(req.body)
-
 
   try {
     req.body.id = uuid();
-    //const postPatient = await axios.post(`${serverBaseURL}/patients`, req.body);
-    //const newPatient = createNewPatientFromUnknown(postPatient.data)
+    const newEntry = createNewEntryFromUnknown(req.body);
+    console.log(newEntry);
+    const newEntries = foundPatient!.entries.concat(newEntry);
 
-    res.status(201);
+    foundPatient!.entries = newEntries;
+
+    const postEntry = await axios.patch(
+      `${serverBaseURL}/patients/${foundPatient!.id}`,
+      foundPatient
+    );
+
+    res.status(201).json(postEntry.data.entries);
   } catch (error) {
-    console.log(error)
-    res.status(404).json({ error })
+    console.log(error);
+    res.status(404).json({ error });
   }
-
 });
 
 app.get("/api/diagnoses", async (_req, res) => {
@@ -181,12 +181,10 @@ app.get("/api/diagnoses", async (_req, res) => {
       diagnosesResponse.push(diagnosis);
     });
     res.status(200).json(diagnosesResponse);
-
   } catch (error) {
-    console.log(error)
-    res.status(404).json({ error })
+    console.log(error);
+    res.status(404).json({ error });
   }
-
 });
 
 const PORT = 3001;

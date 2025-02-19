@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Diagnosis, Patient, PatientFormValues } from "../types";
+import { Diagnosis, NewEntry, Patient, PatientFormValues } from "../types";
 
 import { apiBaseUrl } from "../constants";
 
@@ -25,7 +25,9 @@ const fetchDiagnoses = async (codes: Array<string>) => {
     const data = await response.json();
 
     if (!Array.isArray(data)) {
-      throw new Error('Expected an array of JSON objects, but received a different format.');
+      throw new Error(
+        "Expected an array of JSON objects, but received a different format."
+      );
     }
     const filteredData: Diagnosis[] = [];
     if (Array.isArray(data)) {
@@ -38,7 +40,7 @@ const fetchDiagnoses = async (codes: Array<string>) => {
 
     return filteredData as Diagnosis[];
   } catch (error) {
-    console.error('An error occurred:', error);
+    console.error("An error occurred:", error);
     throw error;
   }
 };
@@ -49,9 +51,19 @@ const create = async (object: PatientFormValues) => {
   return data;
 };
 
+const createNewEntry = async (object: NewEntry) => {
+  const { data } = await axios.patch<NewEntry>(
+    `${apiBaseUrl}/patients/${object.id}/entries`,
+    object
+  );
+
+  console.log(data)
+};
+
 export default {
   getAll,
   create,
   fetchPatient,
   fetchDiagnoses,
+  createNewEntry,
 };

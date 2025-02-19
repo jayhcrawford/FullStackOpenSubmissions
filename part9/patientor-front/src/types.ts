@@ -11,6 +11,8 @@ export enum Gender {
 }
 
 export interface NewEntry {
+  id: string,
+  type: EntryType,
   description: string;
   date: string;
   specialist: string;
@@ -93,4 +95,4 @@ export interface StoreState {
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
 
-export type EntryFormValues = NewEntry;
+export type EntryFormValues = HealthCheckEntry | OccupationalHealthcareEntry | HospitalEntry;
