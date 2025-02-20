@@ -154,7 +154,7 @@ app.patch("/api/patients/:id/entries", async (req, res) => {
   try {
     req.body.id = uuid();
     const newEntry = createNewEntryFromUnknown(req.body);
-    console.log(newEntry);
+
     const newEntries = foundPatient!.entries.concat(newEntry);
 
     foundPatient!.entries = newEntries;

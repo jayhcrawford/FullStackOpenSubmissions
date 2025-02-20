@@ -19,7 +19,7 @@ export interface NewEntry {
   diagnosisCodes?: Array<Diagnosis['code']>;
   discharge?: Discharge;
   healthCheckRating?: HealthCheckRating;
-  sickLeave?: object;
+  sickLeave?: SickLeave;
   employerName?: string;
 }
 
@@ -42,7 +42,7 @@ export interface BaseEntry {
   diagnosisCodes?: Array<Diagnosis['code']>;
   discharge?: Discharge;
   healthCheckRating?: HealthCheckRating;
-  sickLeave?: object;
+  sickLeave?: SickLeave;
   employerName?: string;
 }
 
@@ -72,9 +72,13 @@ export interface HealthCheckEntry extends BaseEntry {
 export interface OccupationalHealthcareEntry extends BaseEntry {
   employerName?: string;
   type: EntryType;
-  sickLeave?: object;
+  sickLeave?: SickLeave;
 }
 
+export interface SickLeave {
+  startDate: string,
+  endDate: string
+}
 
 export type Entry =
   | HospitalEntry

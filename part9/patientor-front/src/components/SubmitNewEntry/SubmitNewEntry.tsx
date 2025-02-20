@@ -146,8 +146,8 @@ const SubmitNewEntry = ({ onCancel, onSubmit }: Props) => {
           diagnosisCodes,
           employerName,
           sickLeave: {
-            start: sickLeaveBegin,
-            end: sickLeaveEnd
+            startDate: sickLeaveBegin,
+            endDate: sickLeaveEnd
           }
         });
       }
@@ -224,14 +224,6 @@ const SubmitNewEntry = ({ onCancel, onSubmit }: Props) => {
           value={employerName}
           onChange={({ target }) => setEmployerName(target.value)}
         />
-
-          <TextField
-            label="Specialist"
-            placeholder="Specialist"
-            fullWidth
-            value={specialist}
-            onChange={({ target }) => setSpecialist(target.value)}
-          />
 
           <h4>Sick Leave</h4>
           <BasicDatePicker label="Start Date" changeHandler={setSickLeaveBegin} /><br />

@@ -14,7 +14,6 @@ import patientServices from "../../services/patients";
 import HealthRatingBar from "../HealthRatingBar";
 import NewEntryModal from "../SubmitNewEntry";
 import patients from "../../services/patients";
-import { ConstructionOutlined } from "@mui/icons-material";
 
 interface DiagnosisCodesProps {
   codes: string[];
@@ -80,6 +79,12 @@ const OccupationalHealthcareEntryComponent = (
         <DiagnosisCodes codes={props.diagnosisCodes} />
       ) : null}
       diagnosed by {props.specialist}
+      <br/>
+      employer: {props.employerName}
+      <br/>
+      <h4 style={{margin: "1em 0 0 0"}}>Sick Leave:</h4>
+      <span>Start: {props.sickLeave?.startDate}</span><br/>
+      <span>Start: {props.sickLeave?.endDate}</span>
     </div>
   );
 };
@@ -185,8 +190,14 @@ const PatientDetails = () => {
   };
 
   const submitNewPatient = async (values: NewEntry) => {
-    const result = await patients.createNewEntry(values);
-    console.log(result);
+    try {
+      const result = await patients.createNewEntry(values);
+      if (result && "length" in result) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   useEffect(() => {
@@ -238,7 +249,7 @@ const PatientDetails = () => {
           );
         })}
         <button onClick={() => setModalOpen(true)}>Open</button>
-        {id && <NewEntryModal modalOpen={modalOpen} onClose={closeModal} onSubmit={submitNewPatient}/>}
+        {id && <NewEntryModal modalOpen={modalOpen} onClose={closeModal} onSubmit={submitNewPatient} />}
       </>
 
     );

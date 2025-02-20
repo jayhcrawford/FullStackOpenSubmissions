@@ -52,17 +52,23 @@ export const createNewEntryFromUnknown = (object: any): NewEntry | Error => {
     throw new Error("Incorrect or missing data");
   }
 
-  const isHealthCheckRating = (param: number): param is HealthCheckRating => {
-    return Object.values(HealthCheckRating)
-      .map((v) => v)
-      .includes(param);
-  };
-
   const parseHealthCheckRating = (rating: unknown): HealthCheckRating => {
-    if (!rating || !isNumber(rating) || !isHealthCheckRating(rating)) {
+    if (!rating || !isString(rating)) {
       throw new Error("Incorrect or missing visibility: " + rating);
+    } else {
+      switch (rating) {
+        case "Healthy":
+          return HealthCheckRating.Healthy;
+        case "Low Risk":
+          return HealthCheckRating.LowRisk;
+        case "High Risk":
+          return HealthCheckRating.HighRisk;
+        case "Critical Risk":
+          return HealthCheckRating.CriticalRisk;
+        default:
+          return HealthCheckRating.Healthy;
+      }
     }
-    return rating;
   };
 
   const isString = (text: unknown): text is string => {
@@ -134,10 +140,12 @@ export const createNewEntryFromUnknown = (object: any): NewEntry | Error => {
 
     if (
       "healthCheckRating" in object &&
-      isNumber(object.healthCheckRating) &&
+      isString(object.healthCheckRating) &&
       isNumber(parseHealthCheckRating(object.healthCheckRating))
     ) {
-      newEntry.healthCheckRating = object.healthCheckRating;
+      newEntry.healthCheckRating = parseHealthCheckRating(
+        object.healthCheckRating
+      );
     }
 
     if ("employerName" in object && isString(object.employerName)) {

@@ -52,12 +52,15 @@ const create = async (object: PatientFormValues) => {
 };
 
 const createNewEntry = async (object: NewEntry) => {
-  const { data } = await axios.patch<NewEntry>(
-    `${apiBaseUrl}/patients/${object.id}/entries`,
-    object
-  );
-
-  console.log(data)
+  try {
+    const { data } = await axios.patch<NewEntry>(
+      `${apiBaseUrl}/patients/${object.id}/entries`,
+      object
+    );
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export default {
