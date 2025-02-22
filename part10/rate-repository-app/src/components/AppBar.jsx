@@ -1,19 +1,19 @@
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, ScrollView } from "react-native";
 import Constants from "expo-constants";
 import { Text } from "react-native";
 import { useState } from "react";
-import { AppBarTab } from "./AppBarTab";
 import { theme } from "../../theme";
-
+import { Link } from "react-router-native";
 
 const styles = StyleSheet.create({
   container: {
     paddingTop: 80,
     backgroundColor: theme.colors.headerBackground,
+    flexDirection: "row",
   },
-  header: {
+  tab: {
     color: theme.colors.color,
-    fontSize: 32,
+    fontSize: 24,
     padding: 10,
   },
 });
@@ -21,7 +21,15 @@ const styles = StyleSheet.create({
 const AppBar = () => {
   return (
     <View style={styles.container}>
-      <AppBarTab text="Respositories" style={styles.header}/>
+      <ScrollView horizontal>
+        <Link to="/">
+          <Text style={styles.tab}>Respositories</Text>
+        </Link>
+
+        <Link to="/SignIn">
+          <Text style={styles.tab}>Sign In</Text>
+        </Link>
+      </ScrollView>
     </View>
   );
 };

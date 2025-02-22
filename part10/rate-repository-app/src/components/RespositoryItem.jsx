@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
     color: "black",
   },
   body: {
-    fontsize: 14,
     color: "black",
   },
   tinyLogo: {
