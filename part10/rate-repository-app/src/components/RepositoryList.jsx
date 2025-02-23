@@ -1,6 +1,7 @@
 import React from "react";
 import { FlatList, View, StyleSheet } from "react-native";
 import { RespositoryItem } from "./RespositoryItem";
+import { theme } from "../../theme";
 
 const styles = StyleSheet.create({
   separator: {
@@ -8,8 +9,11 @@ const styles = StyleSheet.create({
   },
   main: {
     backgroundColor: "white",
+    fontFamily: theme.fonts.fontSelection
   },
 });
+
+
 
 const repositories = [
   {

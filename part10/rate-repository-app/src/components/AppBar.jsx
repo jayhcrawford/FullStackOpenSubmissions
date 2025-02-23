@@ -5,6 +5,8 @@ import { useState } from "react";
 import { theme } from "../../theme";
 import { Link } from "react-router-native";
 
+const fontSelection = theme.fonts.fontSelection;
+
 const styles = StyleSheet.create({
   container: {
     paddingTop: 80,
@@ -15,6 +17,7 @@ const styles = StyleSheet.create({
     color: theme.colors.color,
     fontSize: 24,
     padding: 10,
+    fontFamily: fontSelection,
   },
 });
 

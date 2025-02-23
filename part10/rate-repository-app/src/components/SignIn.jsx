@@ -5,6 +5,7 @@ import { TextInput } from "react-native";
 import { useFormik } from "formik";
 
 import * as yup from "yup";
+import { theme } from "../../theme";
 
 const validationSchema = yup.object().shape({
   username: yup.string().required("username is required"),
@@ -15,6 +16,8 @@ const initialValues = {
   username: "",
   password: "",
 };
+
+const fontSlection = theme.fonts.fontSelection;
 
 const MyInput = ({ field, form, ...props }) => {
   return <input {...field} {...props} />;
@@ -106,6 +109,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     padding: 10,
+    fontFamily: theme.fonts.fontSelection,
   },
   input: {
     height: 40,
@@ -115,6 +119,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     margin: marginSide,
     marginTop: 0,
+    fontFamily: theme.fonts.fontSelection,
   },
   input_error: {
     height: 40,
@@ -130,6 +135,7 @@ const styles = StyleSheet.create({
     marginLeft: marginSide,
     marginBottom: 0,
     marginTop: marginSide,
+    fontFamily: theme.fonts.fontSelection,
   },
 });
 

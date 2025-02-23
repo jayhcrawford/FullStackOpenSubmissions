@@ -8,6 +8,7 @@ import {
   StatusBar,
   Image,
 } from "react-native";
+import { theme } from "../../theme";
 
 const largerFont = 20;
 
@@ -18,6 +19,8 @@ const returnWithKSuffix = (number) => {
     return number;
   }
 };
+
+const fontSlection = theme.fonts.fontSelection;
 
 const styles = StyleSheet.create({
   container: {
@@ -34,9 +37,11 @@ const styles = StyleSheet.create({
     fontSize: largerFont,
     fontWeight: "bold",
     color: "black",
+    fontFamily: fontSlection,
   },
   body: {
     color: "black",
+    fontFamily: fontSlection,
   },
   tinyLogo: {
     width: 60,
@@ -45,6 +50,7 @@ const styles = StyleSheet.create({
   },
   top: {
     flexDirection: "row",
+    fontFamily: fontSlection,
   },
   language: {
     backgroundColor: "rgb(24, 119, 242)",
@@ -55,11 +61,13 @@ const styles = StyleSheet.create({
   },
   languageText: {
     color: "white",
+    fontFamily: fontSlection,
   },
   description: {
     fontSize: largerFont,
     flex: 1,
     flexWrap: "wrap",
+    fontFamily: fontSlection,
   },
   topSection: {
     marginLeft: 15,
@@ -69,6 +77,7 @@ const styles = StyleSheet.create({
   details: {
     flexDirection: "row",
     marginTop: 20,
+    fontFamily: fontSlection,
   },
   detailsComp: {
     flexGrow: 1,
@@ -77,10 +86,12 @@ const styles = StyleSheet.create({
   boldDetails: {
     fontWeight: "bold",
     textAlign: "center",
+    fontFamily: fontSlection,
   },
   detailTitle: {
     textAlign: "center",
     color: "grey",
+    fontFamily: fontSlection,
   },
 });
 
