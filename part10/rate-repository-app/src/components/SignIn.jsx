@@ -1,45 +1,83 @@
-import { useFormik } from "formik";
 import { useState } from "react";
 import { TouchableOpacity } from "react-native";
-import { Button, Pressable } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native";
+import { useFormik } from "formik";
+
+import * as yup from "yup";
+
+const validationSchema = yup.object().shape({
+  username: yup.string().required("username is required"),
+  password: yup.string().required("password is required"),
+});
 
 const initialValues = {
   username: "",
   password: "",
 };
 
+const MyInput = ({ field, form, ...props }) => {
+  return <input {...field} {...props} />;
+};
+
 const SignIn = () => {
+  const [inputStyle, setInputStyle] = useState(styles.input);
   const onSubmit = (values) => {
     console.log(values);
   };
 
   const formik = useFormik({
     initialValues,
+    validationSchema,
     onSubmit,
   });
+
+  const validateInput = () => {
+    if (formik.values.password == "" || formik.values.username == "") {
+      setInputStyle(styles.input_error);
+    }
+
+    formik.handleSubmit();
+  };
+
+  const handleInput = (field) => {
+    () => {
+      formik.handleChange(field);
+    };
+  };
 
   return (
     <>
       <View style={styles.container}>
         <Text style={styles.text}>Username</Text>
+        {formik.touched.username && formik.errors.username && (
+          <Text style={{ color: "red", marginLeft: marginSide }}>
+            {formik.errors.username}
+          </Text>
+        )}
         <TextInput
-          style={styles.input}
+          error={() => console.log("error")}
+          style={inputStyle}
           onChangeText={formik.handleChange("username")}
           value={formik.values.username}
           placeholder="Username"
         ></TextInput>
         <Text style={styles.text}>Password</Text>
+        {formik.touched.password && formik.errors.password && (
+          <Text style={{ color: "red", marginLeft: marginSide }}>
+            {formik.errors.password}
+          </Text>
+        )}
         <TextInput
+          error={() => console.log("error")}
           secureTextEntry={true}
-          style={styles.input}
+          style={inputStyle}
           onChangeText={formik.handleChange("password")}
           value={formik.values.password}
           placeholder="Password"
         ></TextInput>
 
-        <TouchableOpacity onPress={formik.handleSubmit} style={styles.button}>
+        <TouchableOpacity onPress={validateInput} style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
       </View>
@@ -61,7 +99,7 @@ const styles = StyleSheet.create({
     marginRight: marginSide,
     marginTop: 15,
     borderRadius: 4,
-    padding: 5
+    padding: 5,
   },
   buttonText: {
     color: "white",
@@ -73,6 +111,15 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    margin: marginSide,
+    marginTop: 0,
+  },
+  input_error: {
+    height: 40,
+    borderColor: "red",
+    borderWidth: 3,
     marginBottom: 10,
     paddingHorizontal: 10,
     margin: marginSide,
