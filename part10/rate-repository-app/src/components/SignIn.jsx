@@ -10,6 +10,7 @@ import useSignIn from "../hooks/useSignIn";
 import { SIGN_IN } from "../graphql/mutations";
 import { useMutation } from "@apollo/client";
 import useLogin from "../hooks/useSignIn";
+import AuthStorage from "../utils/authStorage";
 
 const validationSchema = yup.object().shape({
   username: yup.string().required("username is required"),
@@ -27,12 +28,13 @@ const SignIn = () => {
   const [inputStyle, setInputStyle] = useState(styles.input);
   const { login, data, loading, error, errorMessage } = useLogin();
 
-  const onSubmit = async (values) => {
-    console.log(
-      { password: values.password, username: values.username },
-      "are the values"
-    );
+  const userStorage = new AuthStorage();
 
+  if (data) {
+    userStorage.setAccessToken(data);
+  }
+
+  const onSubmit = async (values) => {
     const credentials = {
       password: values.password,
       username: values.username,

@@ -11,7 +11,6 @@ const useLogin = () => {
     try {
       setErrorMessage(null); // Reset any previous errors
 
-      console.log("inside of hook", credentials);
       loginMutation({
         variables: credentials,
       });
@@ -25,7 +24,6 @@ const useLogin = () => {
       }
     } catch (err) {
       setErrorMessage("Login failed. Please check your credentials.");
-      console.log(error);
     }
   };
 
