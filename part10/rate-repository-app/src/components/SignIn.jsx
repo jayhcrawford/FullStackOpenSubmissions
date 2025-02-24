@@ -18,11 +18,13 @@ const validationSchema = yup.object().shape({
 });
 
 const initialValues = {
-  username: "",
-  password: "",
+  username: "kalle",
+  password: "password",
 };
 
 const fontSlection = theme.fonts.fontSelection;
+
+const authStorage = new AuthStorage();
 
 const SignIn = () => {
   const [inputStyle, setInputStyle] = useState(styles.input);
@@ -55,6 +57,18 @@ const SignIn = () => {
     () => {
       formik.handleChange(field);
     };
+  };
+
+  const reset = async () => {
+    await authStorage.removeAccessToken();
+    const result = await authStorage.getAccessToken();
+    console.log("the reset result is: ", result);
+  };
+
+  const getUser = async () => {
+    const result = await authStorage.getAccessToken();
+    console.log("the user is: ", result);
+
   };
 
   return (
@@ -90,6 +104,12 @@ const SignIn = () => {
 
         <TouchableOpacity onPress={validateInput} style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={reset} style={styles.button}>
+          <Text style={styles.buttonText}>Reset</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={getUser} style={styles.button}>
+          <Text style={styles.buttonText}>Get User</Text>
         </TouchableOpacity>
       </View>
     </>

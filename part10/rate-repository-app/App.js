@@ -5,6 +5,7 @@ import createApolloClient from "./src/utils/apolloClient";
 import AuthStorageContext from "./src/contexts/AuthStorageContext";
 
 import AuthStorage from "./src/utils/authStorage";
+import { Button } from "react-native-web";
 
 const authStorage = new AuthStorage();
 export const apolloClient = createApolloClient(authStorage);
