@@ -28,12 +28,6 @@ const SignIn = () => {
   const [inputStyle, setInputStyle] = useState(styles.input);
   const { login, data, loading, error, errorMessage } = useLogin();
 
-  const userStorage = new AuthStorage();
-
-  if (data) {
-    userStorage.setAccessToken(data);
-  }
-
   const onSubmit = async (values) => {
     const credentials = {
       password: values.password,
