@@ -122,7 +122,7 @@ export const RespositoryItem = ({ item }) => (
           styles.topSection
         } /* contains all of the text elements to the right of the image */
       >
-        <Text style={styles.title}>{item.id.replace(/\./g, "/")}</Text>
+        <Text style={styles.title}>{item.fullName}</Text>
         <Text style={styles.body}>{item.description}</Text>
         <TouchableOpacity style={styles.language}>
           <Text style={styles.languageText}>{item.language}</Text>

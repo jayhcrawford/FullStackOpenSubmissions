@@ -3,6 +3,8 @@ import { FlatList, View, StyleSheet } from "react-native";
 import { RespositoryItem } from "./RespositoryItem";
 import { theme } from "../../theme";
 import useRepositories from "../hooks/useRepositories";
+import { useQuery } from "@apollo/client";
+import { FETCH_REPOS } from "../graphql/queries";
 
 const styles = StyleSheet.create({
   separator: {
@@ -17,19 +19,21 @@ const styles = StyleSheet.create({
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const RepositoryList = () => {
-  const { repositories } = useRepositories();
+  const { data, error, loading } = useRepositories();
 
-  const repositoryNodes = repositories
-    ? repositories.edges.map((edge) => edge.node)
+  const repositoryNodes = data
+    ? data.repositories.edges.map((edge) => edge.node)
     : [];
 
   return (
     <View style={styles.main}>
-      <FlatList
-        data={repositoryNodes}
-        ItemSeparatorComponent={ItemSeparator}
-        renderItem={({ item }) => <RespositoryItem item={item} />}
-      />
+      {repositoryNodes ? (
+        <FlatList
+          data={repositoryNodes}
+          ItemSeparatorComponent={ItemSeparator}
+          renderItem={({ item }) => <RespositoryItem item={item} />}
+        />
+      ) : null}
     </View>
   );
 };
