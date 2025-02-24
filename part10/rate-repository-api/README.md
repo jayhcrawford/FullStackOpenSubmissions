@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/Kaltsoon/rate-repository-api/workflows/CI/badge.svg)
 
-This is a GraphQL API for the Rate Repository application implemented in [Full Stack Open course's React Native part](https://fullstackopen.com/en/part10).
+This is a GraphQL API for the Rate Repository application implemented in [Full Stack Open course's React Native part](https://fullstackopen.com/en/part10). 
 
 ## ✔️ Requirements
 

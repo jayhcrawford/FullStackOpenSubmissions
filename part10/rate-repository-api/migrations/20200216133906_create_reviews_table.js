@@ -1,7 +1,10 @@
-exports.up = function (knex) {
-  return knex.schema.createTable('reviews', (table) => {
+exports.up = function(knex) {
+  return knex.schema.createTable('reviews', table => {
     table.text('id').primary();
-    table.text('user_id').references('users.id').onDelete('cascade');
+    table
+      .text('user_id')
+      .references('users.id')
+      .onDelete('cascade');
     table
       .text('repository_id')
       .references('repositories.id')
@@ -15,6 +18,6 @@ exports.up = function (knex) {
   });
 };
 
-exports.down = function (knex) {
+exports.down = function(knex) {
   return knex.schema.dropTableIfExists('reviews');
 };

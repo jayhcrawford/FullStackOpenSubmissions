@@ -13,7 +13,11 @@ export const typeDefs = gql`
 
 const argsSchema = yup.object({
   after: yup.string(),
-  first: yup.number().min(1).max(30).default(30),
+  first: yup
+    .number()
+    .min(1)
+    .max(30)
+    .default(30),
 });
 
 export const resolvers = {
