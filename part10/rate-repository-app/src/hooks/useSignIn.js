@@ -19,6 +19,7 @@ const useLogin = () => {
         variables: credentials,
       });
 
+      console.log("the result in SignIn: ", result);
       dispatch({
         payload: result.data.authenticate.accessToken,
         type: "login",
