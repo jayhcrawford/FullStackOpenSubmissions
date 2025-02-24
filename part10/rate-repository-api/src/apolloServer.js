@@ -19,6 +19,7 @@ const apolloErrorFormatter = (error) => {
 
   if (originalError instanceof ValidationError) {
     normalizedError = toApolloError(error, 'BAD_USER_INPUT');
+    
   } else if (error.originalError instanceof ApolloError || isGraphQLError) {
     normalizedError = error;
   }

@@ -34,6 +34,9 @@ const argsSchema = yup.object().shape({
 export const resolvers = {
   Mutation: {
     authenticate: async (obj, args, { authService }) => {
+
+      console.log('\n\n\n\n\n')
+      console.log("in the resolver")
       const {
         credentials: { username, password },
       } = await argsSchema.validate(args, {

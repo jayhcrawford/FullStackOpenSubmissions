@@ -6,6 +6,10 @@ import { useFormik } from "formik";
 
 import * as yup from "yup";
 import { theme } from "../../theme";
+import useSignIn from "../hooks/useSignIn";
+import { SIGN_IN } from "../graphql/mutations";
+import { useMutation } from "@apollo/client";
+import useLogin from "../hooks/useSignIn";
 
 const validationSchema = yup.object().shape({
   username: yup.string().required("username is required"),
@@ -19,14 +23,22 @@ const initialValues = {
 
 const fontSlection = theme.fonts.fontSelection;
 
-const MyInput = ({ field, form, ...props }) => {
-  return <input {...field} {...props} />;
-};
-
 const SignIn = () => {
   const [inputStyle, setInputStyle] = useState(styles.input);
-  const onSubmit = (values) => {
-    console.log(values);
+  const { login, data, loading, error, errorMessage } = useLogin();
+
+  const onSubmit = async (values) => {
+    console.log(
+      { password: values.password, username: values.username },
+      "are the values"
+    );
+
+    const credentials = {
+      password: values.password,
+      username: values.username,
+    };
+
+    login(credentials);
   };
 
   const formik = useFormik({
