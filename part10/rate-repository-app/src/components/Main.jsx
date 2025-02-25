@@ -7,13 +7,13 @@ import { theme } from "../../theme";
 import { Route, Routes, Navigate } from 'react-router-native';
 import SignIn from "./SignIn";
 
-const Main = () => {
+const Main = (props) => {
   return (
     <>
-      <AppBar />
+      <AppBar loggedIn={props.loggedIn} setLoggedIn={props.setLoggedIn}/>
       <Routes>
         <Route path="/" element={<RepositoryList />} />
-        <Route path="/SignIn" element={<SignIn />} />
+        <Route path="/SignIn" element={<SignIn loggedIn={props.loggedIn} setLoggedIn={props.setLoggedIn}/>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

@@ -16,6 +16,7 @@ import AuthStorageContext, {
   reducer,
   state,
 } from "../contexts/AuthStorageContext";
+import { apolloClient } from "../../App";
 
 const validationSchema = yup.object().shape({
   username: yup.string().required("username is required"),
@@ -23,15 +24,15 @@ const validationSchema = yup.object().shape({
 });
 
 const initialValues = {
-  username: "kalle",
-  password: "password",
+  username: "",
+  password: "",
 };
 
 const fontSlection = theme.fonts.fontSelection;
 
 const authStorage = new AuthStorage();
 
-const SignIn = () => {
+const SignIn = (props) => {
   const [inputStyle, setInputStyle] = useState(styles.input);
   const { login, data, loading, error, errorMessage } = useLogin();
   const [store, dispatch] = useReducer(reducer, state);
@@ -43,6 +44,16 @@ const SignIn = () => {
     };
 
     login(credentials);
+
+    try {
+      const checkToken = await authStorage.getAccessToken();
+      if (checkToken) {
+        console.log(checkToken);
+        props.setLoggedIn(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const formik = useFormik({
@@ -65,54 +76,54 @@ const SignIn = () => {
     };
   };
 
-  const reset = () => {
-    dispatch({type: "reset"})
-  }
-
-  const getUser = () => {
-    dispatch({type: "getUser"})
-  }
+  const logOut = () => {
+    dispatch({ type: "reset" });
+    props.setLoggedIn(false);
+    apolloClient.resetStore();
+  };
 
   return (
     <>
       <View style={styles.container}>
-        <Text style={styles.text}>Username</Text>
-        {formik.touched.username && formik.errors.username && (
-          <Text style={{ color: "red", marginLeft: marginSide }}>
-            {formik.errors.username}
-          </Text>
+        {!props.loggedIn && (
+          <>
+            <Text style={styles.text}>Username</Text>
+            {formik.touched.username && formik.errors.username && (
+              <Text style={{ color: "red", marginLeft: marginSide }}>
+                {formik.errors.username}
+              </Text>
+            )}
+            <TextInput
+              error={() => console.log("error")}
+              style={inputStyle}
+              onChangeText={formik.handleChange("username")}
+              value={formik.values.username}
+              placeholder="Username"
+            ></TextInput>
+            <Text style={styles.text}>Password</Text>
+            {formik.touched.password && formik.errors.password && (
+              <Text style={{ color: "red", marginLeft: marginSide }}>
+                {formik.errors.password}
+              </Text>
+            )}
+            <TextInput
+              error={() => console.log("error")}
+              secureTextEntry={true}
+              style={inputStyle}
+              onChangeText={formik.handleChange("password")}
+              value={formik.values.password}
+              placeholder="Password"
+            ></TextInput>
+            <TouchableOpacity onPress={validateInput} style={styles.button}>
+              <Text style={styles.buttonText}>Log In</Text>
+            </TouchableOpacity>
+          </>
         )}
-        <TextInput
-          error={() => console.log("error")}
-          style={inputStyle}
-          onChangeText={formik.handleChange("username")}
-          value={formik.values.username}
-          placeholder="Username"
-        ></TextInput>
-        <Text style={styles.text}>Password</Text>
-        {formik.touched.password && formik.errors.password && (
-          <Text style={{ color: "red", marginLeft: marginSide }}>
-            {formik.errors.password}
-          </Text>
+        {props.loggedIn && (
+          <TouchableOpacity onPress={logOut} style={styles.button}>
+            <Text style={styles.buttonText}>Log Out</Text>
+          </TouchableOpacity>
         )}
-        <TextInput
-          error={() => console.log("error")}
-          secureTextEntry={true}
-          style={inputStyle}
-          onChangeText={formik.handleChange("password")}
-          value={formik.values.password}
-          placeholder="Password"
-        ></TextInput>
-
-        <TouchableOpacity onPress={validateInput} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={reset} style={styles.button}>
-          <Text style={styles.buttonText}>Reset</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={getUser} style={styles.button}>
-          <Text style={styles.buttonText}>Get User</Text>
-        </TouchableOpacity>
       </View>
     </>
   );

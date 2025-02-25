@@ -11,39 +11,25 @@ import { useEffect, useState } from "react";
 const authStorage = new AuthStorage();
 export const apolloClient = createApolloClient(authStorage);
 
-const acquireToken = async () => {
-  const result = await authStorage.getAccessToken();
-  console.log("in acquire token: ", '\n','\n','\n','\n','\n', result);
-  return result;
-};
-
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userToken, setUserToken] = useState("");
+
 
   useEffect(() => {
     if (!loggedIn) {
-      const getToken = async () => {
-        const result = await acquireToken();
-        return result;
+      if (authStorage.getAccessToken() != undefined) {
+        setLoggedIn(true);
       }
-
-      const token = getToken();
-      setUserToken(token);
-      setLoggedIn(true);
-    }
-    if (loggedIn && userToken == "") {
+    } else if (loggedIn && authStorage.getAccessToken() == undefined) {
       setLoggedIn(false);
     }
-  }, [loggedIn, userToken]);
-
-  console.log(userToken, "is the token");
+  }, []);
 
   return (
     <NativeRouter>
       <ApolloProvider client={apolloClient}>
         <AuthStorageContext.Provider value={authStorage}>
-          <Main />
+          <Main loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
         </AuthStorageContext.Provider>
       </ApolloProvider>
     </NativeRouter>

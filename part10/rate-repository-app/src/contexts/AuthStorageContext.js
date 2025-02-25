@@ -18,12 +18,10 @@ export async function reducer(state, action) {
     }
     case "reset": {
       const result = await authStorage.removeAccessToken();
-      console.log(result)
       return { token: "" };
     }
     case "getUser": {
       const result = await authStorage.getAccessToken();
-      console.log(result, "is the result in state")
       return { token: state.token };
     }
   }

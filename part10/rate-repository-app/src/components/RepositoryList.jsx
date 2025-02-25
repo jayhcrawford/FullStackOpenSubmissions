@@ -35,12 +35,14 @@ const RepositoryList = () => {
 
   return (
     <>
-      <TouchableOpacity
+{/*     
+      RESET BUTTON FOR WORKING IN DEV
+<TouchableOpacity
         onPress={() => DevSettings.reload()}
         style={styles.button}
       >
         <Text style={styles.buttonText}>Reset</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <View style={styles.main}>
         {repositoryNodes ? (
           <FlatList

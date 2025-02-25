@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 });
 
 
-const AppBar = () => {
+const AppBar = (props) => {
 
   return (
     <View style={styles.container}>
@@ -35,7 +35,7 @@ const AppBar = () => {
         </Link>
 
         <Link to="/SignIn">
-          <Text style={styles.tab}>Sign In</Text>
+          <Text style={styles.tab}>{!props.loggedIn ? "Sign In" : "Sign Out"}</Text>
         </Link>
       </ScrollView>
     </View>
