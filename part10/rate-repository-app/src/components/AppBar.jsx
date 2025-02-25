@@ -1,11 +1,14 @@
 import { View, StyleSheet, Pressable, ScrollView } from "react-native";
 import Constants from "expo-constants";
 import { Text } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { theme } from "../../theme";
 import { Link } from "react-router-native";
+import AuthStorage from "../utils/authStorage";
 
 const fontSelection = theme.fonts.fontSelection;
+
+const authStorage = new AuthStorage();
 
 const styles = StyleSheet.create({
   container: {
@@ -21,7 +24,9 @@ const styles = StyleSheet.create({
   },
 });
 
+
 const AppBar = () => {
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal>

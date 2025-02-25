@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useReducer, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native";
@@ -11,6 +11,11 @@ import { SIGN_IN } from "../graphql/mutations";
 import { useMutation } from "@apollo/client";
 import useLogin from "../hooks/useSignIn";
 import AuthStorage from "../utils/authStorage";
+import AuthStorageContext, {
+  initialState,
+  reducer,
+  state,
+} from "../contexts/AuthStorageContext";
 
 const validationSchema = yup.object().shape({
   username: yup.string().required("username is required"),
@@ -29,6 +34,7 @@ const authStorage = new AuthStorage();
 const SignIn = () => {
   const [inputStyle, setInputStyle] = useState(styles.input);
   const { login, data, loading, error, errorMessage } = useLogin();
+  const [store, dispatch] = useReducer(reducer, state);
 
   const onSubmit = async (values) => {
     const credentials = {
@@ -59,17 +65,13 @@ const SignIn = () => {
     };
   };
 
-  const reset = async () => {
-    await authStorage.removeAccessToken();
-    const result = await authStorage.getAccessToken();
-    console.log("the reset result is: ", result);
-  };
+  const reset = () => {
+    dispatch({type: "reset"})
+  }
 
-  const getUser = async () => {
-    const result = await authStorage.getAccessToken();
-    console.log("the user is: ", result);
-
-  };
+  const getUser = () => {
+    dispatch({type: "getUser"})
+  }
 
   return (
     <>

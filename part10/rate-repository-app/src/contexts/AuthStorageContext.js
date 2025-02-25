@@ -4,17 +4,27 @@ import AuthStorage from "../utils/authStorage";
 const AuthStorageContext = createContext();
 const authStorage = new AuthStorage();
 
-export const initialState = { token: "" };
+const state = { token: "" };
 
-console.log(initialState, "initial State")
+console.log(state, "initial State");
 
-export function reducer(state, action) {
+export async function reducer(state, action) {
   switch (action.type) {
     case "login": {
-      authStorage.setAccessToken(action.payload);
+      const result = await authStorage.setAccessToken(action.payload);
       return {
-        token: action.payload,
+        token: result,
       };
+    }
+    case "reset": {
+      const result = await authStorage.removeAccessToken();
+      console.log(result)
+      return { token: "" };
+    }
+    case "getUser": {
+      const result = await authStorage.getAccessToken();
+      console.log(result, "is the result in state")
+      return { token: state.token };
     }
   }
   throw Error("Unknown action: " + action.type);

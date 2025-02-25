@@ -1,8 +1,8 @@
 import { ApolloClient, useMutation } from "@apollo/client";
-import { useReducer, useState } from "react";
+import { useContext, useReducer, useState } from "react";
 import { SIGN_IN } from "../graphql/mutations";
 
-import { initialState, reducer } from "../contexts/AuthStorageContext";
+import AuthStorageContext, { initialState, reducer } from "../contexts/AuthStorageContext";
 import { apolloClient } from "../../App";
 
 const useLogin = () => {
