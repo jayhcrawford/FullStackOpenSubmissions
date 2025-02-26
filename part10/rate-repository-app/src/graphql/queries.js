@@ -18,3 +18,12 @@ export const FETCH_REPOS = gql`
     }
   }
 `;
+
+export const FETCH_ME = gql`
+  {
+    me {
+      id
+      username
+    }
+  }
+`;

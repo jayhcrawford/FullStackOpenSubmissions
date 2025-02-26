@@ -6,14 +6,12 @@ const authStorage = new AuthStorage();
 
 const state = { token: "" };
 
-console.log(state, "initial State");
-
 export async function reducer(state, action) {
   switch (action.type) {
     case "login": {
       const result = await authStorage.setAccessToken(action.payload);
       return {
-        token: result,
+        token: action.payload,
       };
     }
     case "reset": {

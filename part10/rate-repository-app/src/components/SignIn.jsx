@@ -6,10 +6,10 @@ import { useFormik } from "formik";
 
 import * as yup from "yup";
 import { theme } from "../../theme";
-import useSignIn from "../hooks/useSignIn";
+import useSignIn from "../hooks/useLogIn";
 import { SIGN_IN } from "../graphql/mutations";
-import { useMutation } from "@apollo/client";
-import useLogin from "../hooks/useSignIn";
+import { useMutation, useQuery } from "@apollo/client";
+import useLogin from "../hooks/useLogIn";
 import AuthStorage from "../utils/authStorage";
 import AuthStorageContext, {
   initialState,
@@ -17,6 +17,8 @@ import AuthStorageContext, {
   state,
 } from "../contexts/AuthStorageContext";
 import { apolloClient } from "../../App";
+import { FETCH_ME } from "../graphql/queries";
+
 
 const validationSchema = yup.object().shape({
   username: yup.string().required("username is required"),
@@ -34,8 +36,15 @@ const authStorage = new AuthStorage();
 
 const SignIn = (props) => {
   const [inputStyle, setInputStyle] = useState(styles.input);
-  const { login, data, loading, error, errorMessage } = useLogin();
+  const { login, data, loading, error, errorMessage } = useLogin(props.setLoggedIn);
   const [store, dispatch] = useReducer(reducer, state);
+
+  const { _loading, _error, _data, refetch } = useQuery(FETCH_ME)
+
+  console.log(loading, "is the loading")
+  console.log(error, "is the error")
+  console.log(data, "is the data")
+
 
   const onSubmit = async (values) => {
     const credentials = {
@@ -43,16 +52,10 @@ const SignIn = (props) => {
       username: values.username,
     };
 
-    login(credentials);
-
     try {
-      const checkToken = await authStorage.getAccessToken();
-      if (checkToken) {
-        console.log(checkToken);
-        props.setLoggedIn(true);
-      }
+      login(credentials);
     } catch (error) {
-      console.log(error);
+      console.log("error calling login (hook) from SignIn.jsx");
     }
   };
 
@@ -79,7 +82,12 @@ const SignIn = (props) => {
   const logOut = () => {
     dispatch({ type: "reset" });
     props.setLoggedIn(false);
-    apolloClient.resetStore();
+    props.setReset("reset");
+  };
+
+  const reset = () => {
+    dispatch({ type: "reset" });
+    authStorage.removeAccessToken();
   };
 
   return (
@@ -124,6 +132,10 @@ const SignIn = (props) => {
             <Text style={styles.buttonText}>Log Out</Text>
           </TouchableOpacity>
         )}
+
+        <TouchableOpacity onPress={reset} style={styles.button}>
+          <Text style={styles.buttonText}>Reset</Text>
+        </TouchableOpacity>
       </View>
     </>
   );
