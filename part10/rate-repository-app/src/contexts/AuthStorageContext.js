@@ -1,10 +1,11 @@
 import { createContext } from "react";
 import AuthStorage from "../utils/authStorage";
 
+
 const AuthStorageContext = createContext();
 const authStorage = new AuthStorage();
 
-const state = { token: "" };
+
 
 export async function reducer(state, action) {
   switch (action.type) {

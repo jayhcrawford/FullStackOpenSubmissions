@@ -1,4 +1,4 @@
-import { useContext, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native";
@@ -6,17 +6,13 @@ import { useFormik } from "formik";
 
 import * as yup from "yup";
 import { theme } from "../../theme";
-import useSignIn from "../hooks/useLogIn";
-import { SIGN_IN } from "../graphql/mutations";
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import useLogin from "../hooks/useLogIn";
 import AuthStorage from "../utils/authStorage";
-import AuthStorageContext, {
-  initialState,
+import {
   reducer,
   state,
 } from "../contexts/AuthStorageContext";
-import { apolloClient } from "../../App";
 import { FETCH_ME } from "../graphql/queries";
 
 
@@ -41,10 +37,8 @@ const SignIn = (props) => {
 
   const { _loading, _error, _data, refetch } = useQuery(FETCH_ME)
 
-  console.log(loading, "is the loading")
-  console.log(error, "is the error")
-  console.log(data, "is the data")
 
+  console.log(_data, "is the data in SignIn")
 
   const onSubmit = async (values) => {
     const credentials = {

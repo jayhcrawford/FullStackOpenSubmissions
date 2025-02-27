@@ -46,11 +46,14 @@ const App = () => {
       //verify that the user is logged in with a valid token here
 
       setLoggedIn(true);
+      triggerRefetch();
+
 
     } else if (reset == "reset") {
       //this happens on logout
-      apolloClient.resetStore();
+      
       authStorage.removeAccessToken();
+      apolloClient.resetStore();
       setLoggedIn(false);
       setReset("");
 

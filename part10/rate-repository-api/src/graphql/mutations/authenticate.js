@@ -35,8 +35,15 @@ export const resolvers = {
   Mutation: {
     authenticate: async (obj, args, { authService }) => {
 
+
+
       console.log('\n\n\n\n\n')
       console.log("in the resolver")
+      console.log(obj, "object")
+      console.log(args, "args")
+      console.log(authService, "authService")
+      console.log('\n\n\n\n\n')
+
       const {
         credentials: { username, password },
       } = await argsSchema.validate(args, {
