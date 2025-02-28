@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useContext, useEffect, useReducer, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native";
@@ -10,11 +10,13 @@ import { useQuery } from "@apollo/client";
 import useLogin from "../hooks/useLogIn";
 import AuthStorage from "../utils/authStorage";
 import {
+  AuthDispatch,
+  AuthState,
+  AuthStorageContext,
   reducer,
   state,
-} from "../contexts/AuthStorageContext";
+} from "../contexts/Context_AuthProvider";
 import { FETCH_ME } from "../graphql/queries";
-
 
 const validationSchema = yup.object().shape({
   username: yup.string().required("username is required"),
@@ -22,23 +24,38 @@ const validationSchema = yup.object().shape({
 });
 
 const initialValues = {
-  username: "",
-  password: "",
+  username: "kalle",
+  password: "password",
 };
-
-const fontSlection = theme.fonts.fontSelection;
-
-const authStorage = new AuthStorage();
 
 const SignIn = (props) => {
   const [inputStyle, setInputStyle] = useState(styles.input);
-  const { login, data, loading, error, errorMessage } = useLogin(props.setLoggedIn);
-  const [store, dispatch] = useReducer(reducer, state);
+  const [tokenDispatched, setTokenDispatched] = useState(false);
+  const dispatch = useContext(AuthDispatch);
+  const state = useContext(AuthState);
 
-  const { _loading, _error, _data, refetch } = useQuery(FETCH_ME)
+  const { login, data, caughtToken, loading, errorMessage } = useLogin();
 
+  const { _loading, _error, _data, refetch } = useQuery(FETCH_ME);
 
-  console.log(_data, "is the data in SignIn")
+  const logState = async (_state) => {
+    console.log(await _state);
+  };
+
+  if (state) {
+    logState("(FROM: SignIn) The state is: ", state);
+  }
+
+  if (!tokenDispatched && caughtToken) {
+    dispatch({ type: "login", payload: caughtToken });
+    setTokenDispatched(true);
+  }
+
+  let iter = 0;
+
+  useEffect(() => {
+    console.log("caught token iter", iter++, caughtToken);
+  }, [caughtToken]);
 
   const onSubmit = async (values) => {
     const credentials = {
@@ -47,6 +64,10 @@ const SignIn = (props) => {
     };
 
     try {
+      console.log(
+        "(FROM: SignIn.jsx) are the credentials going to the useLogin hook.",
+        credentials
+      );
       login(credentials);
     } catch (error) {
       console.log("error calling login (hook) from SignIn.jsx");
@@ -67,21 +88,15 @@ const SignIn = (props) => {
     formik.handleSubmit();
   };
 
+  const reset = () => {
+    console.log("perform a reset");
+    dispatch({type: "reset"})
+  };
+
   const handleInput = (field) => {
     () => {
       formik.handleChange(field);
     };
-  };
-
-  const logOut = () => {
-    dispatch({ type: "reset" });
-    props.setLoggedIn(false);
-    props.setReset("reset");
-  };
-
-  const reset = () => {
-    dispatch({ type: "reset" });
-    authStorage.removeAccessToken();
   };
 
   return (
@@ -127,9 +142,11 @@ const SignIn = (props) => {
           </TouchableOpacity>
         )}
 
-        <TouchableOpacity onPress={reset} style={styles.button}>
-          <Text style={styles.buttonText}>Reset</Text>
-        </TouchableOpacity>
+        {
+          <TouchableOpacity onPress={reset} style={styles.button}>
+            <Text style={styles.buttonText}>Reset</Text>
+          </TouchableOpacity>
+        }
       </View>
     </>
   );

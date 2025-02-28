@@ -18,13 +18,29 @@ class AuthStorage {
 
   async setAccessToken(accessToken) {
     // Add the access token to the storage
-    await AsyncStorage.setItem(`${this.namespace}:token`, accessToken);
+
+    console.log(
+      "(FROM: Context_setAccessToken) the accessToken is: ",
+      accessToken
+    );
+
+    try {
+      await AsyncStorage.setItem(`${this.namespace}:token`, accessToken);
+    } catch (error) {
+      console.log(error);
+    }
+
     return "token set";
   }
 
   async removeAccessToken() {
     // Remove the access token from the storage
-    await AsyncStorage.removeItem(`${this.namespace}:token`);
+    try {
+      await AsyncStorage.clear(); //${this.namespace}:token
+    } catch (error) {
+      console.log(error);
+    }
+
     return "token removed from local storage";
   }
 }

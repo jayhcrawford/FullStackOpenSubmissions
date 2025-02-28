@@ -11,12 +11,12 @@ const httpLink = createHttpLink({
 
 const createApolloClient = (authStorage) => {
   const authLink = setContext(async (_, { headers }) => {
-    console.log("i tried to get the token")
+    console.log("(FROM: apolloClient.js)i tried to get the token")
 
     try {
       const accessToken = await authStorage.getAccessToken();
-      console.log("i tried to get the token")
-      console.log(await accessToken, "here it is!")
+      console.log("(FROM: apolloClient.js TRY BLOCK)i tried to get the token")
+      console.log("(FROM: apolloClient.js TRY BLOCK) `here it is!",await accessToken)
       return {
         headers: {
           ...headers,

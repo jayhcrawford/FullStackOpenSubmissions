@@ -1,35 +1,32 @@
-import { ApolloClient, useMutation } from "@apollo/client";
-import { useContext, useReducer, useState } from "react";
+import { useMutation } from "@apollo/client";
+import { useState } from "react";
 import { SIGN_IN } from "../graphql/mutations";
 
-import {
-  initialState,
-  reducer,
-} from "../contexts/AuthStorageContext";
-
-const useLogin = (setter) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [tokenInState, setTokenInState] = useState("");
+const useLogin = (dispatch) => {
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [caughtToken, setCaughtToken] = useState("");
 
   const [loginMutation, { data, loading, error }] = useMutation(SIGN_IN, {
     onCompleted: (data) => {
-      dispatch({
-        payload: data.authenticate.accessToken,
-        type: "login",
-      });
+      console.log("(FROM: useLogin.js) the mutation was completed");
+      console.log("(FROM: useLogin.js) the mutation response is: ", data);
+      console.log("(FROM: useLogin.js) the caughtToken will be set as: ", data.authenticate.accessToken);
 
-      setter(true);
+      setCaughtToken(data.authenticate.accessToken);
     },
     onError: (_error) => {
       console.log(_error, "is the reason the login failed");
     },
   });
 
-  const [errorMessage, setErrorMessage] = useState(null);
-
   const login = async (credentials) => {
     try {
       //to query graphql
+
+      console.log(
+        "(FROM useLogin.js) the login credentials in the useLogIn hook are: ",
+        credentials
+      );
 
       setErrorMessage(null); // Reset any previous errors
 
@@ -44,6 +41,7 @@ const useLogin = (setter) => {
   return {
     login,
     data,
+    caughtToken,
     loading,
     error,
     errorMessage,

@@ -38,10 +38,10 @@ export const resolvers = {
 
 
       console.log('\n\n\n\n\n')
-      console.log("in the resolver")
-      console.log(obj, "object")
-      console.log(args, "args")
-      console.log(authService, "authService")
+      console.log("(FROM Mutation: authenticate) in the resolver")
+      console.log(obj, "(FROM Mutation: authenticate) object")
+      console.log(args, "(FROM Mutation: authenticate) args")
+      console.log(authService, "(FROM Mutation: authenticate) authService")
       console.log('\n\n\n\n\n')
 
       const {
