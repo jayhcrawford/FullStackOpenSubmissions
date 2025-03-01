@@ -6,17 +6,8 @@ import { useFormik } from "formik";
 
 import * as yup from "yup";
 import { theme } from "../../theme";
-import { useQuery } from "@apollo/client";
 import useLogin from "../hooks/useLogIn";
-import AuthStorage from "../utils/authStorage";
-import {
-  AuthDispatch,
-  AuthState,
-  AuthStorageContext,
-  reducer,
-  state,
-} from "../contexts/Context_AuthProvider";
-import { FETCH_ME } from "../graphql/queries";
+import { AuthDispatch, AuthState } from "../contexts/Context_AuthProvider";
 
 const validationSchema = yup.object().shape({
   username: yup.string().required("username is required"),
@@ -24,38 +15,15 @@ const validationSchema = yup.object().shape({
 });
 
 const initialValues = {
-  username: "kalle",
-  password: "password",
+  username: "",
+  password: "",
 };
 
 const SignIn = (props) => {
   const [inputStyle, setInputStyle] = useState(styles.input);
-  const [tokenDispatched, setTokenDispatched] = useState(false);
-  const dispatch = useContext(AuthDispatch);
-  const state = useContext(AuthState);
+  const { dispatch, state } = useContext(AuthState);
 
-  const { login, data, caughtToken, loading, errorMessage } = useLogin();
-
-  const { _loading, _error, _data, refetch } = useQuery(FETCH_ME);
-
-  const logState = async (_state) => {
-    console.log(await _state);
-  };
-
-  if (state) {
-    logState("(FROM: SignIn) The state is: ", state);
-  }
-
-  if (!tokenDispatched && caughtToken) {
-    dispatch({ type: "login", payload: caughtToken });
-    setTokenDispatched(true);
-  }
-
-  let iter = 0;
-
-  useEffect(() => {
-    console.log("caught token iter", iter++, caughtToken);
-  }, [caughtToken]);
+  const { login, data, loading, errorMessage } = useLogin(dispatch);
 
   const onSubmit = async (values) => {
     const credentials = {
@@ -64,10 +32,6 @@ const SignIn = (props) => {
     };
 
     try {
-      console.log(
-        "(FROM: SignIn.jsx) are the credentials going to the useLogin hook.",
-        credentials
-      );
       login(credentials);
     } catch (error) {
       console.log("error calling login (hook) from SignIn.jsx");
@@ -88,65 +52,61 @@ const SignIn = (props) => {
     formik.handleSubmit();
   };
 
-  const reset = () => {
-    console.log("perform a reset");
-    dispatch({type: "reset"})
-  };
-
-  const handleInput = (field) => {
-    () => {
-      formik.handleChange(field);
-    };
+  const reset = async () => {
+    try {
+      await dispatch({ type: "reset" });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <>
       <View style={styles.container}>
-        {!props.loggedIn && (
+        <>
+          {!state.validated ? (
+            <>
+              <Text style={styles.text}>Username</Text>
+              {formik.touched.username && formik.errors.username && (
+                <Text style={{ color: "red", marginLeft: marginSide }}>
+                  {formik.errors.username}
+                </Text>
+              )}
+              <TextInput
+                error={() => console.log("error")}
+                style={inputStyle}
+                onChangeText={formik.handleChange("username")}
+                value={formik.values.username}
+                placeholder="Username"
+              ></TextInput>
+              <Text style={styles.text}>Password</Text>
+              {formik.touched.password && formik.errors.password && (
+                <Text style={{ color: "red", marginLeft: marginSide }}>
+                  {formik.errors.password}
+                </Text>
+              )}
+              <TextInput
+                error={() => console.log("error")}
+                secureTextEntry={true}
+                style={inputStyle}
+                onChangeText={formik.handleChange("password")}
+                value={formik.values.password}
+                placeholder="Password"
+              ></TextInput>
+              <TouchableOpacity onPress={validateInput} style={styles.button}>
+                <Text style={styles.buttonText}>Log In</Text>
+              </TouchableOpacity>
+            </>
+          ) : null}
+        </>
+
+        {state.validated ? (
           <>
-            <Text style={styles.text}>Username</Text>
-            {formik.touched.username && formik.errors.username && (
-              <Text style={{ color: "red", marginLeft: marginSide }}>
-                {formik.errors.username}
-              </Text>
-            )}
-            <TextInput
-              error={() => console.log("error")}
-              style={inputStyle}
-              onChangeText={formik.handleChange("username")}
-              value={formik.values.username}
-              placeholder="Username"
-            ></TextInput>
-            <Text style={styles.text}>Password</Text>
-            {formik.touched.password && formik.errors.password && (
-              <Text style={{ color: "red", marginLeft: marginSide }}>
-                {formik.errors.password}
-              </Text>
-            )}
-            <TextInput
-              error={() => console.log("error")}
-              secureTextEntry={true}
-              style={inputStyle}
-              onChangeText={formik.handleChange("password")}
-              value={formik.values.password}
-              placeholder="Password"
-            ></TextInput>
-            <TouchableOpacity onPress={validateInput} style={styles.button}>
-              <Text style={styles.buttonText}>Log In</Text>
+            <TouchableOpacity onPress={reset} style={styles.button}>
+              <Text style={styles.buttonText}>Log Out</Text>
             </TouchableOpacity>
           </>
-        )}
-        {props.loggedIn && (
-          <TouchableOpacity onPress={logOut} style={styles.button}>
-            <Text style={styles.buttonText}>Log Out</Text>
-          </TouchableOpacity>
-        )}
-
-        {
-          <TouchableOpacity onPress={reset} style={styles.button}>
-            <Text style={styles.buttonText}>Reset</Text>
-          </TouchableOpacity>
-        }
+        ) : null}
       </View>
     </>
   );

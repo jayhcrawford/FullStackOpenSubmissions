@@ -25,6 +25,8 @@ class AuthService {
       return null;
     }
 
+    console.log(tokenPayload, "is the token payload")
+
     return tokenPayload.userId;
   }
 
@@ -34,6 +36,8 @@ class AuthService {
     if (!id) {
       return null;
     }
+
+    console.log("the id is: ", id)
 
     return this.dataLoaders.userLoader.load(id);
   }

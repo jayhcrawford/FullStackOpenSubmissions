@@ -1,4 +1,9 @@
-import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import {
+  ApolloClient,
+  ApolloLink,
+  InMemoryCache,
+  createHttpLink,
+} from "@apollo/client";
 import Constants from "expo-constants";
 import { setContext } from "@apollo/client/link/context";
 
@@ -9,14 +14,16 @@ const httpLink = createHttpLink({
   uri: apolloUri,
 });
 
+const logLink = new ApolloLink((operation, forward) => {
+  return forward(operation).map((result) => {
+    return result;
+  });
+});
+
 const createApolloClient = (authStorage) => {
   const authLink = setContext(async (_, { headers }) => {
-    console.log("(FROM: apolloClient.js)i tried to get the token")
-
     try {
       const accessToken = await authStorage.getAccessToken();
-      console.log("(FROM: apolloClient.js TRY BLOCK)i tried to get the token")
-      console.log("(FROM: apolloClient.js TRY BLOCK) `here it is!",await accessToken)
       return {
         headers: {
           ...headers,
@@ -31,9 +38,17 @@ const createApolloClient = (authStorage) => {
     }
   });
 
+  /*   return new ApolloClient({
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache(),
+  }); */
 
   return new ApolloClient({
-    link: authLink.concat(httpLink),
+    link: ApolloLink.from([
+      logLink,
+      authLink, httpLink, // Add your custom link here
+      // other links (e.g., HttpLink)
+    ]),
     cache: new InMemoryCache(),
   });
 };

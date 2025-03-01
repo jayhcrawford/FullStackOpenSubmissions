@@ -14,6 +14,9 @@
     "@apollo/client": "^3.13.1",
     "@expo/metro-config": "^0.17.4",
     "@expo/metro-runtime": "~3.1.1",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "apollo-link": "^1.2.14",
+    "apollo-link-logger": "^2.0.1",
     "expo": "^52.0.0",
     "expo-status-bar": "~1.11.1",
     "formik": "^2.4.6",
@@ -23,15 +26,15 @@
     "react-native": "0.73.6",
     "react-native-web": "~0.19.6",
     "react-router-native": "^6.29.0",
-    "yup": "^1.6.1",
-    "@react-native-async-storage/async-storage": "1.23.1"
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@babel/eslint-parser": "^7.26.8",
     "eslint": "^9.20.1",
     "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-react-native": "^5.0.0"
+    "eslint-plugin-react-native": "^5.0.0",
+    "typescript": "^5.3.3"
   },
   "private": true
 }

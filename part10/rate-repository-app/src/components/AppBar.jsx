@@ -1,10 +1,11 @@
 import { View, StyleSheet, Pressable, ScrollView } from "react-native";
 import Constants from "expo-constants";
 import { Text } from "react-native";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { theme } from "../../theme";
 import { Link } from "react-router-native";
 import AuthStorage from "../utils/authStorage";
+import { AuthState } from "../contexts/Context_AuthProvider";
 
 const fontSelection = theme.fonts.fontSelection;
 
@@ -24,8 +25,8 @@ const styles = StyleSheet.create({
   },
 });
 
-
 const AppBar = (props) => {
+  const { state, dispatch } = useContext(AuthState);
 
   return (
     <View style={styles.container}>
@@ -35,7 +36,7 @@ const AppBar = (props) => {
         </Link>
 
         <Link to="/SignIn">
-          <Text style={styles.tab}>{!props.loggedIn ? "Sign In" : "Sign Out"}</Text>
+          <Text style={styles.tab}>{state.validated ? "Sign Out" : "Sign In"}</Text>
         </Link>
       </ScrollView>
     </View>
