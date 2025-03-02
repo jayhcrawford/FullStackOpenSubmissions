@@ -1,4 +1,4 @@
-import RepositoryList from "./RepositoryList";
+import RepositoryList, { RenderRepositoryList } from "./RepositoryList/RepositoryList";
 import AppBar from "./AppBar";
 
 import { Route, Routes, Navigate } from "react-router-native";

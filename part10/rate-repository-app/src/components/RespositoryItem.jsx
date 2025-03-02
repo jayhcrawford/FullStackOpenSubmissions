@@ -105,7 +105,7 @@ const RepoDetail = ({ detailName, detailNum }) => {
 };
 
 export const RespositoryItem = ({ item }) => (
-  <View style={styles.item}>
+  <View style={styles.item} testID="repo-item">
     <View
       style={
         styles.top
