@@ -2,12 +2,12 @@ import { useContext, useEffect, useReducer, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native";
-import { useFormik } from "formik";
+import { useFormik, Form } from "formik";
 
 import * as yup from "yup";
-import { theme } from "../../theme";
-import useLogin from "../hooks/useLogIn";
-import { AuthDispatch, AuthState } from "../contexts/Context_AuthProvider";
+import { theme } from "../../../theme";
+import useLogin from "../../hooks/useLogIn";
+import {  AuthState } from "../../contexts/Context_AuthProvider";
 
 const validationSchema = yup.object().shape({
   username: yup.string().required("username is required"),
@@ -64,6 +64,7 @@ const SignIn = (props) => {
     <>
       <View style={styles.container}>
         <>
+
           {!state.validated ? (
             <>
               <Text style={styles.text}>Username</Text>
@@ -96,6 +97,9 @@ const SignIn = (props) => {
               <TouchableOpacity onPress={validateInput} style={styles.button}>
                 <Text style={styles.buttonText}>Log In</Text>
               </TouchableOpacity>
+              {/* <TouchableOpacity onPress={()=>formikProps.handleReset()} style={styles.button}>
+                <Text style={styles.buttonText}>Log In</Text>
+              </TouchableOpacity> */}
             </>
           ) : null}
         </>
