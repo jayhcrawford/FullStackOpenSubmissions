@@ -108,7 +108,7 @@ export const LoginForm = ({
   );
 };
 
-const marginSide = 20;
+export const marginSide = 20;
 
 const styles = StyleSheet.create({
   container: {

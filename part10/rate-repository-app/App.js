@@ -4,6 +4,7 @@ import { ApolloProvider } from "@apollo/client";
 import { AuthProvider } from "./src/contexts/Context_AuthProvider";
 import { apolloClient } from "./ApolloConfig";
 
+
 const App = () => {
   return (
     <NativeRouter>

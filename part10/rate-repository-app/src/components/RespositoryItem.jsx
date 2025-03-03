@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { Pressable, TouchableOpacity } from "react-native";
 import {
   View,
   FlatList,
@@ -104,37 +104,51 @@ const RepoDetail = ({ detailName, detailNum }) => {
   );
 };
 
-export const RespositoryItem = ({ item }) => (
-  <View style={styles.item} testID="repo-item">
-    <View
-      style={
-        styles.top
-      } /* This contains repo image, title, description, language */
-    >
-      <Image
-        style={styles.tinyLogo}
-        source={{
-          uri: item.ownerAvatarUrl,
-        }}
-      />
-      <View
-        style={
-          styles.topSection
-        } /* contains all of the text elements to the right of the image */
-      >
-        <Text style={styles.title}>{item.fullName}</Text>
-        <Text style={styles.body}>{item.description}</Text>
-        <TouchableOpacity style={styles.language}>
-          <Text style={styles.languageText}>{item.language}</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+export const RespositoryItem = ({ item, navigation }) => {
 
-    <View style={styles.details} /* bottom area */>
-      <RepoDetail detailName={"Stars"} detailNum={item.stargazersCount} />
-      <RepoDetail detailName={"Forks"} detailNum={item.forksCount} />
-      <RepoDetail detailName={"Reviews"} detailNum={item.reviewCount} />
-      <RepoDetail detailName={"Ratings"} detailNum={item.ratingAverage} />
-    </View>
-  </View>
-);
+
+  const handlePress = (itemId) => {
+    if (navigation) {
+      navigation.navigate("Repository Details", { id: itemId });
+    } else {
+      //do nothing
+    }
+  };
+
+  return (
+    <Pressable onPress={() => handlePress(item.id)}>
+      <View style={styles.item} testID="repo-item">
+        <View
+          style={
+            styles.top
+          } /* This contains repo image, title, description, language */
+        >
+          <Image
+            style={styles.tinyLogo}
+            source={{
+              uri: item.ownerAvatarUrl,
+            }}
+          />
+          <View
+            style={
+              styles.topSection
+            } /* contains all of the text elements to the right of the image */
+          >
+            <Text style={styles.title}>{item.fullName}</Text>
+            <Text style={styles.body}>{item.description}</Text>
+            <TouchableOpacity style={styles.language}>
+              <Text style={styles.languageText}>{item.language}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.details} /* bottom area */>
+          <RepoDetail detailName={"Stars"} detailNum={item.stargazersCount} />
+          <RepoDetail detailName={"Forks"} detailNum={item.forksCount} />
+          <RepoDetail detailName={"Reviews"} detailNum={item.reviewCount} />
+          <RepoDetail detailName={"Ratings"} detailNum={item.ratingAverage} />
+        </View>
+      </View>
+    </Pressable>
+  );
+};

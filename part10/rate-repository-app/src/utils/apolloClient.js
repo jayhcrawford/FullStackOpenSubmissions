@@ -1,13 +1,16 @@
+// import "dotenv/config"
+
 import {
   ApolloClient,
   ApolloLink,
   InMemoryCache,
   createHttpLink,
 } from "@apollo/client";
-import Constants from "expo-constants";
+// import Constants from "expo-constants";
 import { setContext } from "@apollo/client/link/context";
 
-const apolloUri = Constants.expoConfig.extra.apollo_uri;
+// const apolloUri = Constants.expoConfig.extra.apollo_uri;
+const apolloUri = process.env.EXPO_PUBLIC_APOLLO_URI
 
 const httpLink = createHttpLink({
   uri: apolloUri,

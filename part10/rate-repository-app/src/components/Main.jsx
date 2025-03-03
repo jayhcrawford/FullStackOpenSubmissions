@@ -1,14 +1,29 @@
-import RepositoryList, { RenderRepositoryList } from "./RepositoryList/RepositoryList";
+import RepositoryList from "./RepositoryList/RepositoryList";
 import AppBar from "./AppBar";
 
 import { Route, Routes, Navigate } from "react-router-native";
 import { FETCH_ME } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import { useContext, useEffect, useState } from "react";
-import { AuthDispatch, AuthState } from "../contexts/Context_AuthProvider";
-import { Button } from "react-native";
+import { AuthState } from "../contexts/Context_AuthProvider";
 import AuthStorage from "../utils/authStorage";
 import LoginFormContainer from "./SignIn/LoginFormContainer";
+
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { Linking } from "expo-linking";
+import RepositoryDetails from "./RepositoryDetails";
+
+const Stack = createStackNavigator();
+
+const linking = {
+  prefixes: ["myapp://"],
+  config: {
+    screens: {
+      ItemDetail: "item/:id",
+    },
+  },
+};
 
 const tokenPresent = (dispatch) => {
   //if the user was logged in before they booted the app, fetch their data and log them in
@@ -49,11 +64,36 @@ const Main = (props) => {
     <>
       <AppBar />
       <Routes>
-        <Route path="/" element={<RepositoryList />} />
+        <Route path="/" element={<MyStack />} />
         <Route path="/SignIn" element={<LoginFormContainer />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
+  );
+};
+
+const MyStack = () => {
+  return (
+    <NavigationContainer linking={linking}>
+      <Stack.Navigator
+        initialRouteName="Repository List"
+        screenOptions={{
+          headerBackTitle: "Back",
+          headerTitle: "",
+          headerStyle: {
+            height: 60,
+          },
+        }}
+      >
+        <Stack.Screen
+
+          name="Repository List"
+          component={RepositoryList}
+          options={{ title: "Repository List", headerShown: false, }}
+        />
+        <Stack.Screen name="Repository Details" component={RepositoryDetails} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
