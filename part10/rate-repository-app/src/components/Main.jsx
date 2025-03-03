@@ -2,15 +2,13 @@ import RepositoryList, { RenderRepositoryList } from "./RepositoryList/Repositor
 import AppBar from "./AppBar";
 
 import { Route, Routes, Navigate } from "react-router-native";
-import SignIn from "./SignIn/SignIn";
 import { FETCH_ME } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import { useContext, useEffect, useState } from "react";
 import { AuthDispatch, AuthState } from "../contexts/Context_AuthProvider";
 import { Button } from "react-native";
 import AuthStorage from "../utils/authStorage";
-import LoginForm from "./SignIn/LoginForm";
-import LoginFormContainer from "./SignIn/LoginFormCGPT";
+import LoginFormContainer from "./SignIn/LoginFormContainer";
 
 const tokenPresent = (dispatch) => {
   //if the user was logged in before they booted the app, fetch their data and log them in

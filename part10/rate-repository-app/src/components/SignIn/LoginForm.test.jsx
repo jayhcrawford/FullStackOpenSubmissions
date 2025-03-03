@@ -5,7 +5,7 @@ import {
   waitFor,
   screen,
 } from "@testing-library/react-native";
-import { LoginFormC } from "./LoginFormC";
+import { LoginForm } from "./LoginForm";
 
 describe("SignIn", () => {
   describe("SignInContainer", () => {
@@ -20,7 +20,7 @@ describe("SignIn", () => {
       const validated = false; // Assuming validated is false initially
 
       const { getByPlaceholderText, getByText } = render(
-        <LoginFormC
+        <LoginForm
           onUsernameChange={(text) => {
             vals.username = text;
           }}
