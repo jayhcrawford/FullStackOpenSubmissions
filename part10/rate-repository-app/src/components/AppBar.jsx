@@ -36,8 +36,16 @@ const AppBar = (props) => {
         </Link>
 
         <Link to="/SignIn">
-          <Text style={styles.tab}>{state.validated ? "Sign Out" : "Sign In"}</Text>
+          <Text style={styles.tab}>
+            {state.validated ? "Sign Out" : "Sign In"}
+          </Text>
         </Link>
+
+        {!state.validated && (
+          <Link to="/SignUp">
+            <Text style={styles.tab}>Sign Up</Text>
+          </Link>
+        )}
       </ScrollView>
     </View>
   );

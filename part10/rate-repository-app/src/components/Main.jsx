@@ -13,6 +13,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Linking } from "expo-linking";
 import RepositoryDetails from "./RepositoryDetails";
+import { SignUpForm } from "./SignUp/SignUp";
+import SignUpFormContainer from "./SignUp/SignUpFormContainer";
 
 const Stack = createStackNavigator();
 
@@ -66,6 +68,7 @@ const Main = (props) => {
       <Routes>
         <Route path="/" element={<MyStack />} />
         <Route path="/SignIn" element={<LoginFormContainer />} />
+        <Route path="/SignUp" element={<SignUpFormContainer />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

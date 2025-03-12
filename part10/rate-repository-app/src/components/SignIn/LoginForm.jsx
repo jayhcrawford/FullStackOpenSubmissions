@@ -61,6 +61,8 @@ export const LoginForm = ({
                     touched.username && errors.username && styles.errorInput,
                   ]}
                   placeholder="Username"
+                  placeholderTextColor="grey"
+
                   onChangeText={(text) => {
                     handleChange("username")(text);
                     onUsernameChange(text);
@@ -80,6 +82,7 @@ export const LoginForm = ({
                     touched.password && errors.password && styles.errorInput,
                   ]}
                   placeholder="Password"
+                  placeholderTextColor="grey"
                   secureTextEntry
                   onChangeText={(text) => {
                     handleChange("password")(text);
