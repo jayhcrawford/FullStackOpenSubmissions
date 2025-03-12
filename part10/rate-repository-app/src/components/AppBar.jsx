@@ -41,6 +41,12 @@ const AppBar = (props) => {
           </Text>
         </Link>
 
+        {state.validated && (
+          <Link to="/Review">
+            <Text style={styles.tab}>Create A Review</Text>
+          </Link>
+        )}
+
         {!state.validated && (
           <Link to="/SignUp">
             <Text style={styles.tab}>Sign Up</Text>

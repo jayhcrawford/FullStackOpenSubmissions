@@ -15,6 +15,7 @@ import { Linking } from "expo-linking";
 import RepositoryDetails from "./RepositoryDetails";
 import { SignUpForm } from "./SignUp/SignUp";
 import SignUpFormContainer from "./SignUp/SignUpFormContainer";
+import ReviewFormContainer from "./ReviewForm/ReviewFormContainer"
 
 const Stack = createStackNavigator();
 
@@ -66,16 +67,17 @@ const Main = (props) => {
     <>
       <AppBar />
       <Routes>
-        <Route path="/" element={<MyStack />} />
+        <Route path="/" element={<Repositories />} />
         <Route path="/SignIn" element={<LoginFormContainer />} />
         <Route path="/SignUp" element={<SignUpFormContainer />} />
+        <Route path="/Review" element={<ReviewFormContainer />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );
 };
 
-const MyStack = () => {
+const Repositories = () => {
   return (
     <NavigationContainer linking={linking}>
       <Stack.Navigator

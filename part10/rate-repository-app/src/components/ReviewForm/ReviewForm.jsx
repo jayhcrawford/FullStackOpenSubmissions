@@ -14,9 +14,10 @@ import { theme } from "../../../theme";
 
 // Validation Schema with Yup
 const validationSchema = Yup.object().shape({
-  username: Yup.string().required("Login is required"),
-  password: Yup.string().required("Password is required"),
-  password2: Yup.string().required("Password is required"),
+  repoOwner: Yup.string().required("Owner name is required"),
+  repoName: Yup.string().required("Repository name is required"),
+  repoRating: Yup.number().min(0).max(100).required("Rating betweeon 0 and 100 is required"),
+  repoReview: Yup.string(),
 });
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -27,12 +28,17 @@ export const ReviewForm = ({
   validated,
   loading,
   errorMessage,
-  username,
-  password,
-  password2,
-  onUsernameChange,
-  onPasswordChange,
-  onPassword2Change,
+
+  repoOwner,
+  repoName,
+  repoRating,
+  repoReview,
+
+  onRepoOwnerChange,
+  onRepoNameChange,
+  onRepoRatingChange,
+  onRepoReviewChange,
+
   onSubmit,
 }) => {
   const handleSubmit = async (values) => {
@@ -43,7 +49,7 @@ export const ReviewForm = ({
   return (
     <View style={styles.container}>
       <Formik
-        initialValues={{ username, password, password2 }}
+        initialValues={{ repoOwner, repoName, repoRating, repoReview }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
@@ -60,19 +66,19 @@ export const ReviewForm = ({
               <TextInput
                 style={[
                   styles.input,
-                  touched.username && errors.username && styles.errorInput,
+                  touched.repoOwner && errors.repoOwner && styles.errorInput,
                 ]}
-                placeholder="Username"
+                placeholder="Repository Owner"
                 placeholderTextColor="grey"
                 onChangeText={(text) => {
-                  handleChange("username")(text);
-                  onUsernameChange(text);
+                  handleChange("repoOwner")(text);
+                  onRepoOwnerChange(text);
                 }}
-                onBlur={handleBlur("username")}
-                value={values.username}
+                onBlur={handleBlur("repoOwner")}
+                value={values.repoOwner}
               />
-              {touched.username && errors.username && (
-                <Text style={styles.errorText}>{errors.username}</Text>
+              {touched.repoOwner && errors.repoOwner && (
+                <Text style={styles.errorText}>{errors.repoOwner}</Text>
               )}
             </View>
 
@@ -80,45 +86,64 @@ export const ReviewForm = ({
               <TextInput
                 style={[
                   styles.input,
-                  touched.password && errors.password && styles.errorInput,
+                  touched.repoName && errors.repoName && styles.errorInput,
                 ]}
-                placeholder="Password"
+                placeholder="Repository Name"
                 placeholderTextColor="grey"
-                secureTextEntry
                 onChangeText={(text) => {
-                  handleChange("password")(text);
-                  onPasswordChange(text);
+                  handleChange("repoName")(text);
+                  onRepoNameChange(text);
                 }}
-                onBlur={handleBlur("password")}
-                value={values.password}
+                onBlur={handleBlur("repoName")}
+                value={values.repoName}
               />
+              {touched.repoName && errors.repoName && (
+                <Text style={styles.errorText}>{errors.repoName}</Text>
+              )}
             </View>
 
             <View style={styles.inputContainer}>
               <TextInput
                 style={[
                   styles.input,
-                  touched.password2 && errors.password2 && styles.errorInput,
+                  touched.repoRating && errors.repoRating && styles.errorInput,
                 ]}
-                placeholder="Password"
+                placeholder="Rating in between 0 and 100"
                 placeholderTextColor="grey"
-                secureTextEntry
                 onChangeText={(text) => {
-                  handleChange("password2")(text);
-                  onPassword2Change(text);
+                  handleChange("repoRating")(text);
+                  onRepoRatingChange(text);
                 }}
-                onBlur={handleBlur("password2")}
-                value={values.password2}
+                onBlur={handleBlur("repoRating")}
+                value={values.repoRating}
               />
+              {touched.repoRating && errors.repoRating && (
+                <Text style={styles.errorText}>{errors.repoRating}</Text>
+              )}
+            </View>
 
-              {((touched.password && errors.password) ||
-                (touched.password2 && errors.password2)) && (
-                <Text style={styles.errorText}>{errors.password2}</Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={[
+                  styles.input,
+                  touched.repoReview && errors.repoReview && styles.errorInput,
+                ]}
+                placeholder="Review"
+                placeholderTextColor="grey"
+                onChangeText={(text) => {
+                  handleChange("repoReview")(text);
+                  onRepoReviewChange(text);
+                }}
+                onBlur={handleBlur("repoReview")}
+                value={values.repoReview}
+              />
+              {touched.repoReview && errors.repoReview && (
+                <Text style={styles.errorText}>{errors.repoReview}</Text>
               )}
             </View>
 
             <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-              <Text style={styles.buttonText}>Sign Up</Text>
+              <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
           </>
         )}

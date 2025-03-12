@@ -1,32 +1,29 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { ReviewForm } from "./ReviewForm";
 
-const ReviewUpFormContainer = () => {
+const ReviewFormContainer = () => {
   // const { dispatch, state } = useContext(AuthState);
   // const { login } = useLogin(dispatch);
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
+  const [repoOwner, setRepoOwner] = useState("");
+  const [repoName, setRepoName] = useState("");
+  const [repoRating, setRepoRating] = useState("");
+  const [repoReview, setRepoReview] = useState("");
 
   const onSubmit = async (values) => {
     const credentials = {
-      username: values.username,
-      password: values.password,
+      owner: repoOwner,
+      name: repoName,
+      rating: repoRating,
+      review: repoReview,
     };
+
+    console.log(credentials);
     // try {
     //   login(credentials);
     // } catch (error) {
     //   console.error("Error calling login from SignIn.jsx", error);
     // }
-  };
-
-  const reset = async () => {
-    try {
-      await dispatch({ type: "reset" });
-    } catch (error) {
-      console.error("Error resetting state", error);
-    }
   };
 
   return (
@@ -36,14 +33,18 @@ const ReviewUpFormContainer = () => {
       // validated={state.validated}
       // loading={state.loading}
       // errorMessage={state.errorMessage}
-      username={username}
-      password={password}
-      onUsernameChange={setUsername}
-      onPasswordChange={setPassword}
-      onPassword2Change={setPassword2}
+
+      repoOwner={repoOwner}
+      repoName={repoName}
+      repoRating={repoRating}
+      repoReview={repoReview}
+      onRepoOwnerChange={setRepoOwner}
+      onRepoNameChange={setRepoName}
+      onRepoRatingChange={setRepoRating}
+      onRepoReviewChange={setRepoReview}
       onSubmit={onSubmit}
     />
   );
 };
 
-export default ReviewUpFormContainer;
+export default ReviewFormContainer;
