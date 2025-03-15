@@ -17,6 +17,8 @@ const SignUpFormContainer = () => {
       username: values.username,
       password: values.password,
     };
+
+    console.log(credentials)
     // try {
     //   login(credentials);
     // } catch (error) {
@@ -41,6 +43,7 @@ const SignUpFormContainer = () => {
       // errorMessage={state.errorMessage}
       username={username}
       password={password}
+      password2={password2}
       onUsernameChange={setUsername}
       onPasswordChange={setPassword}
       onPassword2Change={setPassword2}

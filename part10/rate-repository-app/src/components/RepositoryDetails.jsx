@@ -8,7 +8,7 @@ import { theme } from "../../theme";
 import { ItemSeparator } from "./RepositoryList/RepositoryList";
 import { TouchableOpacity } from "react-native";
 
-function formatDateString(dateString) {
+export function formatDateString(dateString) {
   const date = new Date(dateString);
 
   // Array of month names
@@ -54,7 +54,7 @@ function formatDateString(dateString) {
   return `${month} ${dayWithSuffix} ${year}`;
 }
 
-const ReviewListItem = ({ item }) => {
+export const ReviewListItem = ({ item }) => {
   return (
     <View style={[styles.main, styles.listItem]}>
       <View style={styles.top_container}>
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     backgroundColor: "#F1F1F1",
     marginTop: 20,
-    height: 350,
+    height: 380,
   },
   listItem: {
     padding: 5,

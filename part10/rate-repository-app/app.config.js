@@ -1,4 +1,3 @@
-import "dotenv/config";
 
 export default {
   name: "rate-repository-app",
@@ -39,4 +38,5 @@ export default {
   web: {
     favicon: "./assets/favicon.png",
   },
+  
 };

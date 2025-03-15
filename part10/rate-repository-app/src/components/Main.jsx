@@ -15,7 +15,10 @@ import { Linking } from "expo-linking";
 import RepositoryDetails from "./RepositoryDetails";
 import { SignUpForm } from "./SignUp/SignUp";
 import SignUpFormContainer from "./SignUp/SignUpFormContainer";
-import ReviewFormContainer from "./ReviewForm/ReviewFormContainer"
+import ReviewFormContainer from "./ReviewForm/ReviewFormContainer";
+
+import { PaperProvider } from "react-native-paper";
+import MyReviews from "./MyReviews/MyReviews";
 
 const Stack = createStackNavigator();
 
@@ -71,6 +74,7 @@ const Main = (props) => {
         <Route path="/SignIn" element={<LoginFormContainer />} />
         <Route path="/SignUp" element={<SignUpFormContainer />} />
         <Route path="/Review" element={<ReviewFormContainer />} />
+        <Route path="/MyReviews" element={<MyReviews/>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
@@ -79,26 +83,30 @@ const Main = (props) => {
 
 const Repositories = () => {
   return (
-    <NavigationContainer linking={linking}>
-      <Stack.Navigator
-        initialRouteName="Repository List"
-        screenOptions={{
-          headerBackTitle: "Back",
-          headerTitle: "",
-          headerStyle: {
-            height: 60,
-          },
-        }}
-      >
-        <Stack.Screen
 
-          name="Repository List"
-          component={RepositoryList}
-          options={{ title: "Repository List", headerShown: false, }}
-        />
-        <Stack.Screen name="Repository Details" component={RepositoryDetails} />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <NavigationContainer linking={linking}>
+        <Stack.Navigator
+          initialRouteName="Repository List"
+          screenOptions={{
+            headerBackTitle: "Back",
+            headerTitle: "",
+            headerStyle: {
+              height: 60,
+            },
+          }}
+        >
+          <Stack.Screen
+            name="Repository List"
+            component={RepositoryList}
+            options={{ title: "Repository List", headerShown: false }}
+          />
+          <Stack.Screen
+            name="Repository Details"
+            component={RepositoryDetails}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+
   );
 };
 

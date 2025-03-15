@@ -29,8 +29,7 @@ const ReviewFormContainer = () => {
   return (
     <ReviewForm
       // login={login}
-      reset={reset}
-      // validated={state.validated}
+
       // loading={state.loading}
       // errorMessage={state.errorMessage}
 
@@ -38,10 +37,12 @@ const ReviewFormContainer = () => {
       repoName={repoName}
       repoRating={repoRating}
       repoReview={repoReview}
+
       onRepoOwnerChange={setRepoOwner}
       onRepoNameChange={setRepoName}
       onRepoRatingChange={setRepoRating}
       onRepoReviewChange={setRepoReview}
+
       onSubmit={onSubmit}
     />
   );

@@ -16,7 +16,7 @@ import { theme } from "../../../theme";
 const validationSchema = Yup.object().shape({
   username: Yup.string().required("Login is required"),
   password: Yup.string().required("Password is required"),
-  password2: Yup.string().required("Password is required"),
+  password2: Yup.string().oneOf([Yup.ref("password"), null], "Passwords don't match").required(),
 });
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
